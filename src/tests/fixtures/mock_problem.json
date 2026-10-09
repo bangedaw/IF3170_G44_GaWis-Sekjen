@@ -1,0 +1,207 @@
+{
+  "trucks": [
+    {
+      "id": "T1",
+      "dimensions": {
+        "w": 10,
+        "l": 20,
+        "h": 5
+      },
+      "max_capacity": 500
+    }
+  ],
+  "packages": [
+    {
+      "id": "P01",
+      "dimensions": {
+        "w": 2,
+        "l": 4,
+        "h": 3
+      },
+      "value": 75,
+      "weight": 51,
+      "is_fragile": false,
+      "eta": 1
+    },
+    {
+      "id": "P02",
+      "dimensions": {
+        "w": 3,
+        "l": 6,
+        "h": 3
+      },
+      "value": 81,
+      "weight": 36,
+      "is_fragile": false,
+      "eta": 5
+    },
+    {
+      "id": "P03",
+      "dimensions": {
+        "w": 5,
+        "l": 6,
+        "h": 2
+      },
+      "value": 40,
+      "weight": 10,
+      "is_fragile": false,
+      "eta": 1
+    },
+    {
+      "id": "P04",
+      "dimensions": {
+        "w": 4,
+        "l": 2,
+        "h": 2
+      },
+      "value": 11,
+      "weight": 62,
+      "is_fragile": false,
+      "eta": 4
+    },
+    {
+      "id": "P05",
+      "dimensions": {
+        "w": 4,
+        "l": 3,
+        "h": 2
+      },
+      "value": 42,
+      "weight": 32,
+      "is_fragile": false,
+      "eta": 3
+    },
+    {
+      "id": "P06",
+      "dimensions": {
+        "w": 5,
+        "l": 6,
+        "h": 3
+      },
+      "value": 19,
+      "weight": 56,
+      "is_fragile": false,
+      "eta": 5
+    },
+    {
+      "id": "P07",
+      "dimensions": {
+        "w": 4,
+        "l": 4,
+        "h": 2
+      },
+      "value": 28,
+      "weight": 66,
+      "is_fragile": false,
+      "eta": 6
+    },
+    {
+      "id": "P08",
+      "dimensions": {
+        "w": 4,
+        "l": 2,
+        "h": 3
+      },
+      "value": 57,
+      "weight": 33,
+      "is_fragile": false,
+      "eta": 1
+    },
+    {
+      "id": "P09",
+      "dimensions": {
+        "w": 5,
+        "l": 6,
+        "h": 3
+      },
+      "value": 73,
+      "weight": 65,
+      "is_fragile": true,
+      "eta": 5
+    },
+    {
+      "id": "P10",
+      "dimensions": {
+        "w": 5,
+        "l": 5,
+        "h": 3
+      },
+      "value": 43,
+      "weight": 64,
+      "is_fragile": false,
+      "eta": 4
+    },
+    {
+      "id": "P11",
+      "dimensions": {
+        "w": 2,
+        "l": 6,
+        "h": 1
+      },
+      "value": 26,
+      "weight": 62,
+      "is_fragile": true,
+      "eta": 6
+    },
+    {
+      "id": "P12",
+      "dimensions": {
+        "w": 2,
+        "l": 6,
+        "h": 2
+      },
+      "value": 70,
+      "weight": 19,
+      "is_fragile": false,
+      "eta": 2
+    },
+    {
+      "id": "P13",
+      "dimensions": {
+        "w": 2,
+        "l": 5,
+        "h": 3
+      },
+      "value": 70,
+      "weight": 55,
+      "is_fragile": false,
+      "eta": 5
+    },
+    {
+      "id": "P14",
+      "dimensions": {
+        "w": 4,
+        "l": 6,
+        "h": 2
+      },
+      "value": 95,
+      "weight": 29,
+      "is_fragile": false,
+      "eta": 6
+    },
+    {
+      "id": "P15",
+      "dimensions": {
+        "w": 5,
+        "l": 5,
+        "h": 2
+      },
+      "value": 35,
+      "weight": 28,
+      "is_fragile": false,
+      "eta": 1
+    },
+    {
+      "id": "P16",
+      "dimensions": {
+        "w": 2,
+        "l": 3,
+        "h": 3
+      },
+      "value": 86,
+      "weight": 39,
+      "is_fragile": false,
+      "eta": 4
+    }
+  ]
+}
