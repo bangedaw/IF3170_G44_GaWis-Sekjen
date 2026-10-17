@@ -16,8 +16,11 @@ from typing import Callable, Iterable
 
 from matplotlib.figure import Figure
 
-PALETTE = ("#2b6cb0", "#dd6b20", "#2f855a", "#b83280", "#6b46c1", "#718096", "#c05621", "#2c7a7b")
-LINE, BAND, MUTED = PALETTE[0], PALETTE[1], "#718096"
+# Warna Persib Bandung (biru dan emas) ditambah oranye (macan Maung Bandung) dan abu.
+# Urutannya dipilih agar warna yang bersebelahan berbeda jelas dalam hue dan kecerahan.
+PALETTE = ("#0033A0", "#F2B01E", "#4DA6E8", "#0A1F44", "#E8702A", "#8A97A8", "#1B998B", "#C8102E")
+LINE, BAND, MUTED = PALETTE[0], PALETTE[1], "#6B7A90"
+POINT = PALETTE[3]
 
 
 def load_run(run) -> dict:
@@ -137,9 +140,10 @@ def plot_compare(runs: Iterable, group_by: Callable[[dict], str] = _name, save=N
                                                   ("duration_sec", "Durasi pencarian", "Detik"))):
         series = [[r[key] for r in groups[name]] for name in names]
         ax.bar(range(len(names)), [mean(s) for s in series], yerr=[pstdev(s) if len(s) > 1 else 0 for s in series],
-               color=[PALETTE[i % len(PALETTE)] for i in range(len(names))], alpha=0.75, capsize=4)
+               color=[PALETTE[i % len(PALETTE)] for i in range(len(names))], alpha=0.9, capsize=4,
+               edgecolor="white", linewidth=0.8)
         for x, s in enumerate(series):
-            ax.scatter([x] * len(s), s, color="black", s=12, zorder=3)
+            ax.scatter([x] * len(s), s, color=POINT, s=16, zorder=3, edgecolors="white", linewidths=0.7)
         ax.set_xticks(range(len(names)), names, rotation=30, ha="right", fontsize=8)
         ax.set_title(title)
         _style(ax, "", ylabel)
