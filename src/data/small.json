@@ -1,0 +1,135 @@
+{
+  "trucks": [
+    {
+      "id": "T1",
+      "dimensions": {
+        "w": 6,
+        "l": 8,
+        "h": 4
+      },
+      "max_capacity": 100
+    }
+  ],
+  "packages": [
+    {
+      "id": "P01",
+      "dimensions": {
+        "w": 3,
+        "l": 5,
+        "h": 3
+      },
+      "value": 177,
+      "weight": 19,
+      "is_fragile": false,
+      "eta": 3
+    },
+    {
+      "id": "P02",
+      "dimensions": {
+        "w": 4,
+        "l": 3,
+        "h": 2
+      },
+      "value": 99,
+      "weight": 18,
+      "is_fragile": false,
+      "eta": 1
+    },
+    {
+      "id": "P03",
+      "dimensions": {
+        "w": 4,
+        "l": 5,
+        "h": 2
+      },
+      "value": 115,
+      "weight": 15,
+      "is_fragile": false,
+      "eta": 7
+    },
+    {
+      "id": "P04",
+      "dimensions": {
+        "w": 2,
+        "l": 5,
+        "h": 3
+      },
+      "value": 63,
+      "weight": 14,
+      "is_fragile": false,
+      "eta": 7
+    },
+    {
+      "id": "P05",
+      "dimensions": {
+        "w": 2,
+        "l": 2,
+        "h": 2
+      },
+      "value": 35,
+      "weight": 8,
+      "is_fragile": false,
+      "eta": 1
+    },
+    {
+      "id": "P06",
+      "dimensions": {
+        "w": 4,
+        "l": 5,
+        "h": 3
+      },
+      "value": 161,
+      "weight": 13,
+      "is_fragile": false,
+      "eta": 5
+    },
+    {
+      "id": "P07",
+      "dimensions": {
+        "w": 4,
+        "l": 3,
+        "h": 2
+      },
+      "value": 82,
+      "weight": 10,
+      "is_fragile": false,
+      "eta": 3
+    },
+    {
+      "id": "P08",
+      "dimensions": {
+        "w": 4,
+        "l": 2,
+        "h": 2
+      },
+      "value": 49,
+      "weight": 16,
+      "is_fragile": false,
+      "eta": 1
+    },
+    {
+      "id": "P09",
+      "dimensions": {
+        "w": 2,
+        "l": 3,
+        "h": 2
+      },
+      "value": 24,
+      "weight": 11,
+      "is_fragile": true,
+      "eta": 4
+    },
+    {
+      "id": "P10",
+      "dimensions": {
+        "w": 4,
+        "l": 2,
+        "h": 3
+      },
+      "value": 91,
+      "weight": 17,
+      "is_fragile": false,
+      "eta": 2
+    }
+  ]
+}
