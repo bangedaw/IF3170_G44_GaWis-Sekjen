@@ -121,10 +121,12 @@ def plot_compare(runs: Iterable, group_by: Callable[[dict], str] = _name, save=N
     if not groups:
         raise ValueError("tidak ada run untuk dibandingkan")
     names = list(groups)
-    fig = Figure(figsize=(max(7, 1.3 * len(names) + 3), 4.2))
-    panels = fig.subplots(1, 2)
-    for ax, (key, title, ylabel) in zip(panels, (("final_objective", "Nilai objective akhir", "Objective"),
-                                                  ("duration_sec", "Durasi pencarian", "Detik"))):
+    fig = Figure(figsize=(max(10.5, 1.6 * len(names) + 4.5), 4.2))
+    panels = fig.subplots(1, 3)
+    metrics = (("final_objective", "Nilai objective akhir", "Objective"),
+               ("final_value", "Total value akhir", "Value"),
+               ("duration_sec", "Durasi pencarian", "Detik"))
+    for ax, (key, title, ylabel) in zip(panels, metrics):
         series = [[r[key] for r in groups[name]] for name in names]
         ax.bar(range(len(names)), [mean(s) for s in series], yerr=[pstdev(s) if len(s) > 1 else 0 for s in series],
                color=[PALETTE[i % len(PALETTE)] for i in range(len(names))], alpha=0.9, capsize=4,

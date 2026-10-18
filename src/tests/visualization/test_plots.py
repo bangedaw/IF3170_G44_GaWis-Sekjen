@@ -61,8 +61,19 @@ def test_plot_compare_groups_runs_by_label(tmp_path):
     runs = [load_run(fixture(n)) for n in HC]
     runs += [dict(runs[0], final_objective=runs[0]["final_objective"] + 5, duration_sec=1.0)]
     fig = plot_compare(runs, save=tmp_path / "c.png")
-    assert len(fig.axes) == 2 and is_png(tmp_path / "c.png")
+    assert len(fig.axes) == 3 and is_png(tmp_path / "c.png")
     assert len(fig.axes[0].patches) == len({r.get("label") or r["algorithm"] for r in runs})
+
+
+def test_plot_compare_value_panel_ignores_objective_scale():
+    base = load_run(fixture("mock_steepest_ascent_hc"))
+    runs = [dict(base, label="default", final_objective=100.0, final_value=100.0),
+            dict(base, label="alt", final_objective=5000.0, final_value=90.0)]
+    fig = plot_compare(runs)
+    objective, value, duration = fig.axes
+    assert [round(p.get_height()) for p in objective.patches] == [100, 5000]
+    assert [round(p.get_height()) for p in value.patches] == [100, 90]
+    assert value.get_title() == "Total value akhir" and duration.get_title() == "Durasi pencarian"
 
 
 def test_plot_compare_custom_grouping_and_empty():
