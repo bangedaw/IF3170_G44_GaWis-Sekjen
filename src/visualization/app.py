@@ -8,16 +8,14 @@ and integration with Edo's plots.py.
 from __future__ import annotations
 
 import argparse
-import base64
 import io
 import json
-import mimetypes
 import sys
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import parse_qs, urlparse
 
 SRC_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = SRC_DIR.parent
