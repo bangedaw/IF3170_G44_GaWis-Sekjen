@@ -1,7 +1,6 @@
 import pytest
 
 from algorithms.hill_climbing.common import EPS
-from algorithms.hill_climbing.first_choice import FirstChoiceHC
 from algorithms.hill_climbing.random_restart import RandomRestartHC
 from algorithms.hill_climbing.sideways import SidewaysMoveHC
 from algorithms.hill_climbing.steepest_ascent import SteepestAscentHC
@@ -13,7 +12,6 @@ SINGLE_CLIMB = [
     (StochasticHC, {}),
     (StochasticHC, {"weighted": True}),
     (StochasticHC, {"mode": "random", "max_iterations": 50}),
-    (FirstChoiceHC, {"max_tries": 50}),
 ]
 
 
@@ -85,11 +83,6 @@ def test_sideways_stops_when_limit_reached(plateau, max_sideways):
     assert sum(b == a for a, b in zip(history, history[1:])) == max_sideways
 
 
-def test_first_choice_stops_without_better_neighbor(knapsack):
-    result = FirstChoiceHC(knapsack, seed=1, max_tries=500).run()
-    assert result.extra["stop_reason"] == "no_better_neighbor"
-
-
 def test_random_restart_records_each_climb(knapsack):
     result = RandomRestartHC(knapsack, seed=1, max_restart=4).run()
     extra = result.extra
@@ -125,7 +118,7 @@ def test_random_restart_rejects_invalid_base(knapsack):
         RandomRestartHC(knapsack, base_params={"unknown": 1})
 
 
-@pytest.mark.parametrize("cls", [SteepestAscentHC, SidewaysMoveHC, StochasticHC, FirstChoiceHC, RandomRestartHC])
+@pytest.mark.parametrize("cls", [SteepestAscentHC, SidewaysMoveHC, StochasticHC, RandomRestartHC])
 def test_reproducible(knapsack, cls):
     a, b = cls(knapsack, seed=5).run(), cls(knapsack, seed=5).run()
     assert a.history == b.history and a.final_state == b.final_state

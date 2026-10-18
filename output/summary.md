@@ -4,7 +4,6 @@
 
 | experiment | label | algorithm | objective_name | runs | feasible_rate | final_objective_max | final_objective_mean | final_objective_std | final_value_mean | final_value_std | iterations_mean | iterations_std | duration_sec_mean | duration_sec_std |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| hill_climbing | first_choice_hc | first_choice_hc | default | 3 | 1.00 | 2253.00 | 2077.00 | 153.48 | 2077.00 | 153.48 | 18.00 | 4.58 | 0.4686 | 0.1836 |
 | hill_climbing | random_restart_hc | random_restart_hc | default | 3 | 1.00 | 2462.00 | 2365.67 | 85.91 | 2365.67 | 85.91 | 138.00 | 6.93 | 10.50 | 0.2524 |
 | hill_climbing | sideways_move_hc | sideways_move_hc | default | 3 | 1.00 | 2406.00 | 2395.00 | 16.52 | 2395.00 | 16.52 | 121.00 | 3.61 | 8.80 | 0.3570 |
 | hill_climbing | steepest_ascent_hc | steepest_ascent_hc | default | 3 | 1.00 | 2279.00 | 2262.33 | 18.15 | 2262.33 | 18.15 | 16.00 | 2.00 | 1.21 | 0.1576 |
@@ -15,9 +14,6 @@
 
 | experiment | file | label | algorithm | objective_name | seed | initial_objective | final_objective | final_value | feasible | iterations | duration_sec | restarts | max_restart | sideways_used | max_sideways | stuck_count | population_size | generations | value_per_truck |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| hill_climbing | hill_climbing/first_choice_hc_1.json | first_choice_hc | first_choice_hc | default | 1 | 879.00 | 2253.00 | 2253.00 | True | 23 | 0.5835 |  |  |  |  |  |  |  | [2253.0] |
-| hill_climbing | hill_climbing/first_choice_hc_2.json | first_choice_hc | first_choice_hc | default | 2 | 1107.00 | 1971.00 | 1971.00 | True | 17 | 0.5653 |  |  |  |  |  |  |  | [1971.0] |
-| hill_climbing | hill_climbing/first_choice_hc_3.json | first_choice_hc | first_choice_hc | default | 3 | 1039.00 | 2007.00 | 2007.00 | True | 14 | 0.2568 |  |  |  |  |  |  |  | [2007.0] |
 | hill_climbing | hill_climbing/random_restart_hc_1.json | random_restart_hc | random_restart_hc | default | 1 | 879.00 | 2297.00 | 2297.00 | True | 134 | 10.45 | 10 | 10 |  |  |  |  |  | [2297.0] |
 | hill_climbing | hill_climbing/random_restart_hc_2.json | random_restart_hc | random_restart_hc | default | 2 | 1107.00 | 2462.00 | 2462.00 | True | 134 | 10.28 | 10 | 10 |  |  |  |  |  | [2462.0] |
 | hill_climbing | hill_climbing/random_restart_hc_3.json | random_restart_hc | random_restart_hc | default | 3 | 1039.00 | 2338.00 | 2338.00 | True | 146 | 10.77 | 10 | 10 |  |  |  |  |  | [2338.0] |

@@ -13,7 +13,6 @@ QUICK_PARAMS = {
     "stochastic_hc": {"neighbor_limit": 40, "max_iterations": 4},
     "sideways_move_hc": {"max_sideways": 2, "neighbor_limit": 40, "max_iterations": 4},
     "random_restart_hc": {"max_restart": 2, "base_params": {"neighbor_limit": 30, "max_iterations": 2}},
-    "first_choice_hc": {"max_tries": 30, "max_iterations": 10},
     "simulated_annealing": {"t0": 50, "cooling": 0.99, "max_iterations": 300, "stuck_patience": 50},
 }
 HILL_CLIMBING = [name for name in QUICK_PARAMS if name.endswith("_hc")]
