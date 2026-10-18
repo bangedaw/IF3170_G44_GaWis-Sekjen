@@ -71,6 +71,12 @@ def test_main_runs_all_and_skips_existing(dummy_algorithm, problem_file, tmp_pat
     assert runner.main([str(cfg_path), "--skip-existing", "--only", "rw_s"]) == 0
     assert capsys.readouterr().out.count("dilewati") == 2
 
+    (out / "rw_s1_5.json").unlink()
+    assert runner.main([str(cfg_path), "--dry-run", "--skip-existing"]) == 0
+    printed = capsys.readouterr().out
+    assert printed.count("dilewati") == 3 and "rw_s1_5.json" in printed
+    assert not (out / "rw_s1_5.json").exists()
+
 
 def test_failed_run_does_not_stop_others(dummy_algorithm, problem_file, tmp_path, capsys):
     cfg = config(problem_file, tmp_path / "out", runs=[

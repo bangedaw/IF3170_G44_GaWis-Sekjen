@@ -1,0 +1,13 @@
+{
+  "name": "hill_climbing",
+  "output_dir": "output/hill_climbing",
+  "problem": "src/data/medium.json",
+  "objective": "default",
+  "seeds": [1, 2, 3],
+  "runs": [
+    {"algorithm": "steepest_ascent_hc", "params": {"neighbor_limit": null, "max_iterations": null}},
+    {"algorithm": "stochastic_hc", "params": {"mode": "uphill", "weighted": false, "neighbor_limit": null, "max_iterations": 1000}},
+    {"algorithm": "sideways_move_hc", "params": {"max_sideways": 100, "neighbor_limit": null, "max_iterations": null}},
+    {"algorithm": "random_restart_hc", "params": {"max_restart": 10, "base_algorithm": "steepest_ascent_hc", "base_params": {}}}
+  ]
+}

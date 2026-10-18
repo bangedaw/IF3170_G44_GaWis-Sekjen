@@ -1,0 +1,10 @@
+{
+  "name": "simulated_annealing",
+  "output_dir": "output/simulated_annealing",
+  "problem": "src/data/medium.json",
+  "objective": "default",
+  "seeds": [1, 2, 3],
+  "runs": [
+    {"algorithm": "simulated_annealing", "params": {"t0": 50, "cooling": 0.9998, "t_min": 0.01, "max_iterations": 100000, "stuck_patience": 500, "return_best": false}}
+  ]
+}

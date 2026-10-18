@@ -128,11 +128,11 @@ def main(argv: list[str] | None = None) -> int:
     failures = []
     for i, spec in enumerate(specs, 1):
         head = f"[{i}/{len(specs)}] {spec.label} seed={spec.seed}"
-        if args.dry_run:
-            print(f"{head} -> {_display(spec.output_path)}")
-            continue
         if args.skip_existing and spec.output_path.exists():
             print(f"{head} dilewati (sudah ada)")
+            continue
+        if args.dry_run:
+            print(f"{head} -> {_display(spec.output_path)}")
             continue
         try:
             if spec.problem_file not in problems:
