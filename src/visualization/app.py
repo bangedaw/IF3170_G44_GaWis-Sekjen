@@ -1,10 +1,3 @@
-"""Mejiro Express — 3D Packing & Experiment Results Visualizer Web Application.
-
-Provides an interactive 3D Web UI (Three.js orbit controls), side-by-side initial vs
-final state comparison, multi-truck inspection, outside package tracking, metrics display,
-and integration with Edo's plots.py.
-"""
-
 from __future__ import annotations
 
 import argparse
