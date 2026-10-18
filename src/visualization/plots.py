@@ -1,10 +1,3 @@
-"""Plot hasil run. Input berupa RunResult, dict (isi JSON hasil run), atau path file JSON.
-
-Semua fungsi mengembalikan `matplotlib.figure.Figure` (tanpa pyplot, jadi aman dipakai di server atau
-Streamlit) dan menyimpan PNG bila `save` diberikan.
-
-    python -m visualization.plots output            # buat semua PNG ke output/plots/
-"""
 from __future__ import annotations
 
 import argparse
@@ -16,8 +9,6 @@ from typing import Callable, Iterable
 
 from matplotlib.figure import Figure
 
-# Warna Persib Bandung (biru dan emas) ditambah oranye (macan Maung Bandung) dan abu.
-# Urutannya dipilih agar warna yang bersebelahan berbeda jelas dalam hue dan kecerahan.
 PALETTE = ("#0033A0", "#F2B01E", "#4DA6E8", "#0A1F44", "#E8702A", "#8A97A8", "#1B998B", "#C8102E")
 LINE, BAND, MUTED = PALETTE[0], PALETTE[1], "#6B7A90"
 POINT = PALETTE[3]
@@ -58,7 +49,6 @@ def _style(ax, xlabel: str, ylabel: str) -> None:
 
 
 def plot_objective(run, save=None, mark_restarts: bool = True) -> Figure:
-    """Nilai objective terhadap banyak iterasi yang telah dilewati."""
     run = load_run(run)
     values = run["history"]["objective"]
     fig = Figure(figsize=(7, 4))
@@ -83,7 +73,6 @@ def plot_objective(run, save=None, mark_restarts: bool = True) -> Figure:
 
 
 def plot_acceptance_prob(run, save=None) -> Figure:
-    """e^(dE/T) terhadap banyak iterasi (Simulated Annealing), dengan temperatur pada sumbu kanan."""
     run = load_run(run)
     history = run["history"]
     probs = history.get("acceptance_prob")
@@ -108,7 +97,6 @@ def plot_acceptance_prob(run, save=None) -> Figure:
 
 
 def plot_ga(run, save=None) -> Figure:
-    """Objective maksimum dan rata-rata populasi terhadap generasi (Genetic Algorithm)."""
     run = load_run(run)
     history = run["history"]
     if "max" not in history or "avg" not in history:
@@ -127,7 +115,6 @@ def plot_ga(run, save=None) -> Figure:
 
 
 def plot_compare(runs: Iterable, group_by: Callable[[dict], str] = _name, save=None) -> Figure:
-    """Perbandingan nilai akhir dan durasi antar-kelompok run (mis. varian algoritma atau konfigurasi)."""
     groups: dict[str, list[dict]] = defaultdict(list)
     for run in map(load_run, runs):
         groups[group_by(run)].append(run)
@@ -155,7 +142,6 @@ def _is_run(data) -> bool:
 
 
 def generate_plots(output_dir, plots_dir=None) -> list[Path]:
-    """Buat PNG untuk semua file hasil run di `output_dir` (rekursif) ke `plots_dir` (default output/plots)."""
     output_dir = Path(output_dir)
     plots_dir = Path(plots_dir) if plots_dir else output_dir / "plots"
     written, by_folder = [], defaultdict(list)

@@ -1,24 +1,3 @@
-"""Heuristik kandidat koordinat dan gravity settle.
-
-Ruang koordinat penuh (W x L x H posisi per paket per truk) terlalu besar untuk dienumerasi,
-jadi posisi penempatan dibatasi ke "titik jangkar" yang bersentuhan dengan dinding truk atau
-paket lain (mirip extreme points pada bin packing 3D, mis. Crainic, Perboli & Tadei, 2008):
-
-  1. Jangkar (x, y) diambil dari sudut-sudut paket yang sudah ada (sisi kanan, sisi depan,
-     sudut sendiri, sisi sebelum paket) ditambah sudut/dinding truk.
-  2. Untuk tiap jangkar, z ditentukan dengan "menjatuhkan" paket: z = sisi atas tertinggi
-     di antara paket yang alasnya beririsan (0 bila lantai). Hasilnya selalu tersangga dan
-     tidak pernah beririsan dengan paket lain.
-  3. Ditolak bila keluar dinding, bertumpu pada paket pecah-belah, atau (untuk paket
-     pecah-belah) bila ada paket yang tepat di atasnya.
-
-Jadi setiap kandidat otomatis memenuhi constraint geometri dan tersangga; hanya berat yang
-harus diperiksa pemanggil.
-
-`settle` adalah kebalikannya: setelah sebuah paket diangkat/dirotasi, paket yang tadinya
-bertumpu padanya dijatuhkan ke penyangga tertinggi di bawahnya (gravitasi), supaya satu
-move tidak otomatis menimbulkan banyak pelanggaran "melayang".
-"""
 from __future__ import annotations
 
 import numpy as np
@@ -29,7 +8,6 @@ _EMPTY = np.zeros((0, 3), dtype=np.int64)
 
 
 class TruckBoxes:
-    """Kotak-kotak di dalam satu truk sebagai array numpy (kolom x, y, z, dx, dy, dz)."""
     __slots__ = ("size", "x", "y", "z", "x2", "y2", "z2", "fragile")
 
     def __init__(self, problem: Problem, placements, truck: int, exclude: tuple[int, ...] = ()):
@@ -44,10 +22,6 @@ class TruckBoxes:
 
 def candidate_positions(boxes: TruckBoxes, truck, dims: tuple[int, int, int], fragile: bool,
                         anchors: tuple[np.ndarray, np.ndarray] | None = None) -> np.ndarray:
-    """Posisi (x, y, z) valid secara geometri; array berukuran (C, 3).
-
-    `anchors` = (xs, ys) memaksa pemakaian jangkar tertentu (dipakai oleh swap).
-    """
     dx, dy, dz = dims
     W, L, H = truck.w, truck.l, truck.h
     if dx > W or dy > L or dz > H:
@@ -83,7 +57,6 @@ def candidate_positions(boxes: TruckBoxes, truck, dims: tuple[int, int, int], fr
 
 
 def has_dependents(placements, index: int) -> bool:
-    """Apakah ada paket yang bertumpu langsung di atas paket `index`."""
     p = placements[index]
     if p.truck is None:
         return False
@@ -96,7 +69,6 @@ def has_dependents(placements, index: int) -> bool:
 
 
 def settle(placements: list[Placement], truck: int) -> None:
-    """Jatuhkan paket yang melayang di `truck` ke penyangga tertingginya (in-place)."""
     order = sorted((i for i, p in enumerate(placements) if p.truck == truck and p.z > 0),
                    key=lambda i: placements[i].z)
     if not order:

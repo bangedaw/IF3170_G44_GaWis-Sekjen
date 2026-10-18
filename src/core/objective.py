@@ -1,30 +1,3 @@
-"""Objective function dan evaluasi State.
-
-Objective yang dimaksimalkan = skor paket di dalam truk dikurangi penalti pelanggaran.
-
-Strategi penanganan constraint (penalti berbobot, bukan penolakan):
-  * State yang melanggar constraint tetap boleh dikunjungi pencarian, tetapi dihukum.
-    Ini membuat HC/SA/GA bisa melewati state tidak valid dan memberi gradien menuju
-    state valid (mis. overlap berkurang satu pasangan = objective naik).
-  * Satuan penalti `unit` = skor terbesar di antara semua paket. Satu pelanggaran
-    (overlap, out_of_bounds, floating, fragile_support) bernilai `unit`, sehingga mengeluarkan
-    paket yang melanggar dari truk tidak pernah lebih buruk daripada mempertahankannya.
-  * Kelebihan berat dihukum `rho * kelebihan + unit`, dengan `rho` = rasio skor/berat
-    terbesar di antara paket. Jadi tiap satuan berat berlebih dihukum setidaknya sebesar skor
-    yang bisa dihasilkan satuan berat itu (menambah paket ke truk yang sudah penuh tidak pernah
-    menguntungkan), ditambah `unit` tetap per truk yang kelebihan.
-  * `total_value` pada Evaluation selalu nilai murni paket di dalam truk (tanpa penalti dan
-    tanpa pembobotan) dan `feasible` hanya True bila tidak ada pelanggaran sama sekali, sehingga
-    pelaporan tidak tercampur dengan penalti.
-
-Objective tersedia:
-  "default"  jumlah value paket di dalam truk (sesuai spesifikasi), dikurangi penalti.
-  "alt"      (Bonus 1) hanya memakai atribut yang sudah ada: value, weight, dims, ETA.
-             skor paket = value * (1 + urgensi), urgensi = (ETA_maks - ETA) / (ETA_maks - ETA_min)
-             sehingga paket dengan ETA kecil (lebih mendesak) dihargai hingga 2x lipat, ditambah
-             bonus utilisasi 5% dari total skor seluruh paket dikali rata-rata utilisasi
-             (volume terpakai/volume truk dan berat terangkut/kapasitas, dirata-rata, maks 1).
-"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -52,7 +25,7 @@ class _Scoring:
     scores: tuple[float, ...]
     unit: float
     rho: float
-    utilization_bonus: float  # 0 untuk objective yang tidak memakai bonus utilisasi
+    utilization_bonus: float
 
 
 def _scoring(problem: Problem, name: str) -> _Scoring:
@@ -117,7 +90,6 @@ def evaluate(problem: Problem, state: State, objective: str = "default") -> Eval
 
 
 def get_objective(name: str = "default") -> Callable[[Problem, State], float]:
-    """Fungsi (problem, state) -> float. Memvalidasi nama segera, bukan saat dipanggil."""
     if name not in OBJECTIVES:
         raise ValueError(f"objective tidak dikenal: {name!r}; pilihan: {OBJECTIVES}")
 

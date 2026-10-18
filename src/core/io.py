@@ -1,4 +1,3 @@
-"""Baca problem JSON dan (de)serialisasi State sesuai kontrak 3.2 dan 3.3."""
 from __future__ import annotations
 
 import json
@@ -60,7 +59,6 @@ def state_to_dict(state: State) -> dict:
 
 
 def state_from_dict(data: dict, problem: Problem | None = None) -> State:
-    """Bangun State dari dict. Dengan `problem`, urutan dan `dims` dihitung ulang dari problem."""
     raw = data["placements"]
     ids = problem.ids if problem is not None else tuple(raw)
     placements = []

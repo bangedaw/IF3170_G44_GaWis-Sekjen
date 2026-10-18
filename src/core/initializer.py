@@ -1,4 +1,3 @@
-"""Initial state random (ber-seed lewat `rng`)."""
 from __future__ import annotations
 
 import random
@@ -12,14 +11,6 @@ DEFAULT_P_INSIDE = 0.5
 
 def random_state(problem: Problem, rng: random.Random, mode: str = "feasible",
                  p_inside: float = DEFAULT_P_INSIDE) -> State:
-    """State awal acak: orientasi tiap paket acak, sebagian paket di dalam truk, sisanya di luar.
-
-    mode="feasible" (default): paket diproses dalam urutan acak; tiap paket dengan peluang
-        `p_inside` ditempatkan di titik kandidat acak pada truk acak yang masih muat (geometri dan
-        berat), sehingga state awal valid tetapi acak. Paket yang tidak muat tetap di luar.
-    mode="uniform": koordinat dipilih seragam acak tanpa memeriksa constraint, sehingga state
-        awal umumnya melanggar constraint (overlap, melayang, dst.) dan harus diperbaiki pencarian.
-    """
     if mode not in ("feasible", "uniform"):
         raise ValueError(f"mode harus 'feasible' atau 'uniform', bukan {mode!r}")
     placements = [problem.outside(i, rng.choice(ORIENTATIONS)) for i in range(len(problem.packages))]

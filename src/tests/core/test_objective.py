@@ -23,9 +23,9 @@ def test_default_objective_is_total_value_of_packages_inside(build):
 def test_violations_are_penalized_but_total_value_stays_pure(build):
     make_problem, make_state = build
     problem = make_problem([TRUCK], [pk(10), pk(20)])
-    ev = evaluate(problem, make_state(problem, [(0, 0, 0, 0), (0, 0, 0, 0)]))  # overlap
+    ev = evaluate(problem, make_state(problem, [(0, 0, 0, 0), (0, 0, 0, 0)]))
     assert ev.total_value == 30 and not ev.feasible and ev.violations["overlap"] == 1
-    assert ev.objective == 30 - 20  # penalti = skor terbesar (20)
+    assert ev.objective == 30 - 20
 
 
 def test_each_violation_type_lowers_the_objective(build):
@@ -85,7 +85,6 @@ def test_unknown_objective_raises():
 
 def test_alt_prefers_urgent_packages(build):
     make_problem, make_state = build
-    # P0 punya ETA 1 (mendesak), P2 punya ETA 3; value sama
     problem = make_problem([TRUCK], [pk(10), pk(10), pk(10)])
     urgent = evaluate(problem, make_state(problem, [(0, 0, 0, 0), None, None]), "alt").objective
     late = evaluate(problem, make_state(problem, [None, None, (0, 0, 0, 0)]), "alt").objective

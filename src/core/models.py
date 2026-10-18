@@ -1,9 +1,3 @@
-"""Model data: Package, Truck, Problem, Placement, State.
-
-Sistem koordinat: truk ke-t menempati [0, W) x [0, L) x [0, H), sumbu x = width,
-y = length, z = height (vertikal). Posisi paket = sudut kiri-bawah-belakang (x, y, z).
-Semua koordinat bilangan bulat.
-"""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -54,7 +48,6 @@ class Truck:
 class Problem:
     trucks: tuple[Truck, ...]
     packages: tuple[Package, ...]
-    # tempat menyimpan hasil turunan (skor objective, dsb.) agar tidak dihitung ulang
     cache: dict = field(default_factory=dict, init=False, repr=False)
 
     def __post_init__(self):
@@ -97,13 +90,12 @@ class Problem:
 
 
 class Placement(NamedTuple):
-    """Posisi satu paket. `truck=None` berarti seluruh paket berada di luar truk."""
     truck: int | None
     x: int = 0
     y: int = 0
     z: int = 0
     orientation: str = "xyz"
-    dims: tuple[int, int, int] = (0, 0, 0)  # dimensi efektif (dx, dy, dz), turunan dari orientasi
+    dims: tuple[int, int, int] = (0, 0, 0)
 
     @property
     def inside(self) -> bool:
@@ -112,10 +104,6 @@ class Placement(NamedTuple):
 
 @dataclass(frozen=True)
 class State:
-    """Penempatan semua paket. Immutable: setiap move menghasilkan State baru.
-
-    `placements[i]` adalah penempatan paket ke-i pada `Problem.packages`.
-    """
     ids: tuple[str, ...] = field(compare=False)
     placements: tuple[Placement, ...]
 

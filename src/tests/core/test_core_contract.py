@@ -1,4 +1,3 @@
-"""Tes kontrak: core asli dipakai lewat LocalSearch (algorithms/base.py) seperti oleh Miguel dan Rere."""
 import json
 from pathlib import Path
 

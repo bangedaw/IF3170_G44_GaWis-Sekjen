@@ -68,7 +68,6 @@ def test_floating_when_gap_below(build):
 
 
 def test_one_supported_point_is_enough(build):
-    # alas atas hanya menumpu 1 sel (x=1,y=1) pada paket di bawahnya; spesifikasi: tidak melayang
     result = violations(build, [BIG], [box(), box(2, 2, 1)], [(0, 0, 0, 0), (0, 1, 1, 2)])
     assert not any(result.values())
 
@@ -137,4 +136,4 @@ def test_rotation_changes_what_fits(build):
     make_problem, make_state = build
     problem = make_problem([(3, 3, 6, 100)], [(2, 2, 5, 10, 1, False)])
     assert check_state(problem, make_state(problem, [(0, 0, 0, 0, "xyz")])).feasible
-    assert not check_state(problem, make_state(problem, [(0, 0, 0, 0, "xzy")])).feasible  # dims (2,5,2): y keluar
+    assert not check_state(problem, make_state(problem, [(0, 0, 0, 0, "xzy")])).feasible

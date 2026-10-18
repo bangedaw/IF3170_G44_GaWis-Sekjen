@@ -92,4 +92,4 @@ def test_generate_plots_walks_output_folder(tmp_path):
         "genetic_algorithm/mock_genetic_algorithm_ga.png",
     }
     assert all(is_png(p) for p in written)
-    assert generate_plots(tmp_path) == written  # menjalankan ulang tidak membaca PNG/JSON di plots/ lagi
+    assert generate_plots(tmp_path) == written

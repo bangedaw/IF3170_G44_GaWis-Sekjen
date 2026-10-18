@@ -181,7 +181,6 @@ def test_move_respects_truck_capacity(build):
 
 def test_nothing_is_moved_on_top_of_a_fragile_package(build):
     make_problem, make_state = build
-    # lantai 4x4 sepenuhnya ditutup paket pecah-belah, jadi satu-satunya tempat kosong ada di atasnya
     problem = make_problem([(4, 4, 6, 100)], [box(4, 4, 2, fragile=True), box(4, 4, 2), box(4, 4, 2, fragile=True)])
     state = make_state(problem, [(0, 0, 0, 0), None, None])
     entering = [m for _, m in neighbors(problem, state) if m["type"] == "move" and m["to"] and m["package"] != "P0"]

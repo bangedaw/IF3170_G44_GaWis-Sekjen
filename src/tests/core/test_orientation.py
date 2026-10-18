@@ -13,7 +13,7 @@ def test_six_distinct_orientations():
 
 @pytest.mark.parametrize("orientation, expected", [
     ("xyz", (2, 3, 5)),
-    ("yxz", (3, 2, 5)),   # w sejajar y, l sejajar x
+    ("yxz", (3, 2, 5)),
     ("xzy", (2, 5, 3)),
     ("zyx", (5, 3, 2)),
     ("yzx", (5, 2, 3)),

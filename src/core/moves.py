@@ -1,26 +1,3 @@
-"""Neighbor moves: swap, move, rotate.
-
-Move yang dihasilkan (`Move` berupa dict agar langsung bisa di-log ke JSON):
-  {"type": "swap",   "a": id, "b": id}
-  {"type": "move",   "package": id, "mode": "candidate"|"free"|"remove", "from": [t,x,y,z]|None, "to": [t,x,y,z]|None}
-  {"type": "rotate", "package": id, "axis": "x"|"y"|"z", "orientation": "yxz"}
-
-Keputusan desain (untuk laporan):
-  * swap menukar "slot" dua paket (truk dan footprint), minimal salah satu di dalam truk.
-    Karena dimensi berbeda, tiap paket dijatuhkan (gravity) di salah satu perataan sudut pada
-    footprint slot lawannya. Swap ditolak bila salah satu paket tidak punya perataan yang valid.
-  * move memindahkan paket ke titik kandidat (lihat `candidates.py`), ke truk lain, atau keluar
-    truk. Pada `random_neighbor`, dengan peluang FREE_MOVE_P koordinat dipilih seragam acak di seluruh
-    peti kemas (move bebas sesuai spesifikasi, bisa menghasilkan state tidak valid yang dihukum
-    objective). Orientasi tidak berubah pada move; perubahan orientasi hanya lewat rotate.
-  * rotate memutar paket 90 derajat terhadap sumbu x, y, atau z di tempat. Paket yang keluar
-    dinding digeser masuk. Rotasi ditolak bila tidak mengubah dimensi (mis. kubus) atau bila hasilnya
-    menabrak paket lain / dinding. Jadi satu-satunya move yang sengaja menghasilkan state tidak
-    valid adalah move bebas; pelanggaran lain hanya muncul dari berat berlebih atau paket
-    pecah-belah.
-  * Setiap kali sebuah paket diangkat atau dirotasi, paket yang bertumpu padanya dijatuhkan
-    (`settle`) agar satu move tidak otomatis memunculkan banyak pelanggaran "melayang".
-"""
 from __future__ import annotations
 
 import random
@@ -35,10 +12,10 @@ from .orientation import AXES, dims_for, rotate
 Move = dict
 
 KIND_WEIGHTS = {"swap": 0.25, "move": 0.55, "rotate": 0.20}
-FREE_MOVE_P = 0.10   # peluang move bebas (koordinat acak seragam) pada random_neighbor
-REMOVE_P = 0.15      # peluang move berupa mengeluarkan paket yang sedang di dalam truk
+FREE_MOVE_P = 0.10
+REMOVE_P = 0.15
 MAX_TRIES = 30
-DEFAULT_PER_MOVE = 4  # jumlah posisi kandidat per (paket, truk) pada enumerasi neighbors
+DEFAULT_PER_MOVE = 4
 
 
 def _where(p: Placement):
@@ -46,7 +23,6 @@ def _where(p: Placement):
 
 
 def _lift(problem: Problem, placements: list[Placement], i: int) -> None:
-    """Angkat paket i keluar truk; paket yang bertumpu padanya dijatuhkan."""
     p = placements[i]
     dependents = p.truck is not None and has_dependents(placements, i)
     placements[i] = problem.outside(i, p.orientation)
@@ -59,7 +35,7 @@ def _pick(cands: np.ndarray, rng: random.Random | None, count: int) -> list[tupl
         return []
     if rng is not None:
         order = rng.sample(range(len(cands)), min(count, len(cands)))
-    else:  # deterministik: rendah dulu, lalu y kecil, lalu x kecil
+    else:
         order = np.lexsort((cands[:, 0], cands[:, 1], cands[:, 2]))[:count]
     return [(int(cands[k, 0]), int(cands[k, 1]), int(cands[k, 2])) for k in order]
 
@@ -110,11 +86,6 @@ def _free_move(problem: Problem, state: State, i: int, rng: random.Random) -> tu
 
 
 def _land(problem: Problem, items: list[Placement], i: int, slot: Placement, rng: random.Random | None) -> bool:
-    """Letakkan paket i (sedang di luar) di slot bekas paket lain (`slot`).
-
-    Paket dijatuhkan di salah satu dari empat perataan sudut di dalam footprint slot. Mengembalikan
-    False bila tidak ada perataan yang valid, sehingga swap ditolak.
-    """
     pkg, t = problem.packages[i], slot.truck
     dx, dy = items[i].dims[0], items[i].dims[1]
     xs = {slot.x, slot.x + slot.dims[0] - dx}
@@ -147,7 +118,6 @@ def _swap(problem: Problem, state: State, a: int, b: int, rng: random.Random | N
 
 
 def _clear(problem: Problem, items: list[Placement], i: int) -> bool:
-    """Paket i (di dalam truk) berada di dalam dinding dan tidak menabrak paket lain."""
     p = items[i]
     truck = problem.trucks[p.truck]
     x2, y2, z2 = p.x + p.dims[0], p.y + p.dims[1], p.z + p.dims[2]
@@ -199,12 +169,6 @@ def _specs(problem: Problem, state: State) -> list[tuple]:
 
 def neighbors(problem: Problem, state: State, rng: random.Random | None = None,
               limit: int | None = None, per_move: int = DEFAULT_PER_MOVE) -> Iterator[tuple[State, Move]]:
-    """Enumerasi tetangga: (State baru, Move). Dibangkitkan malas (lazy).
-
-    Dengan `rng`, urutan spesifikasi move diacak dan posisi kandidat disampel acak, sehingga
-    `limit` menghasilkan sampel acak dari neighborhood. Tanpa `rng`, urutannya deterministik.
-    `per_move` membatasi banyak posisi kandidat per (paket, truk) agar neighborhood terkendali.
-    """
     specs = _specs(problem, state)
     if rng is not None:
         rng.shuffle(specs)
@@ -267,7 +231,6 @@ _RANDOM = {"swap": _random_swap, "move": _random_move, "rotate": _random_rotate}
 
 
 def random_neighbor(problem: Problem, state: State, rng: random.Random) -> tuple[State, Move]:
-    """Satu tetangga acak. Jenis move dipilih menurut KIND_WEIGHTS; dicoba ulang bila gagal."""
     kinds, weights = list(KIND_WEIGHTS), list(KIND_WEIGHTS.values())
     for _ in range(MAX_TRIES):
         result = _RANDOM[rng.choices(kinds, weights)[0]](problem, state, rng)

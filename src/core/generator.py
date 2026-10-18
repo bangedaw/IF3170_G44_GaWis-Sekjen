@@ -1,11 +1,3 @@
-"""Pembuat problem uji acak (ber-seed).
-
-Paket dibangkitkan sampai total volume mencapai `volume_ratio` kali volume seluruh truk, dan berat
-diskalakan sampai total berat `weight_ratio` kali total kapasitas, sehingga kapasitas berat dan
-ruang sama-sama membatasi dan tidak semua paket bisa diangkut. Sebagian paket pecah-belah.
-
-    python -m core.generator            # tulis small/medium/large/multi_truck.json ke src/data
-"""
 from __future__ import annotations
 
 import argparse
@@ -15,7 +7,6 @@ from pathlib import Path
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
-# (w, l, h, max_capacity)
 PRESETS = {
     "small": dict(trucks=[(6, 8, 4, 100)], volume_ratio=1.4, max_side=(4, 5, 3), seed=11),
     "medium": dict(trucks=[(10, 20, 5, 500)], volume_ratio=1.2, seed=22),
@@ -32,7 +23,7 @@ def generate_problem(trucks: list[tuple[int, int, int, float]], seed: int, volum
     min_w = min(t[0] for t in trucks)
     min_l = min(t[1] for t in trucks)
     min_h = min(t[2] for t in trucks)
-    if max_side is None:  # sisi maksimum paket relatif terhadap truk terkecil
+    if max_side is None:
         max_side = (max(2, min_w // 2), max(2, min_l // 3), max(1, (min_h * 3) // 5))
 
     target_volume = volume_ratio * sum(w * l * h for w, l, h, _ in trucks)

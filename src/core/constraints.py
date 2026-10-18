@@ -1,17 +1,3 @@
-"""Constraint checker.
-
-Setiap truk diperiksa terpisah dengan operasi matriks numpy (n x n) di atas kotak-kotak
-yang ada di dalamnya, jadi biayanya hampir tidak bergantung pada ukuran truk.
-
-Jenis pelanggaran yang dihitung:
-  overlap          jumlah pasangan paket yang volumenya saling tumpang-tindih
-  out_of_bounds    jumlah paket yang tidak seluruhnya berada di dalam peti kemas
-  floating         jumlah paket yang melayang: z > 0 dan tidak ada satu pun paket lain yang
-                   sisi atasnya tepat di z paket tersebut dengan luas irisan alas > 0
-                   (cukup satu titik alas yang tersangga agar tidak dihitung melayang)
-  fragile_support  jumlah pasangan (pecah-belah j, paket i) dengan i bertumpu langsung di atas j
-  overweight       total kelebihan berat di atas max_capacity, dijumlahkan seluruh truk
-"""
 from __future__ import annotations
 
 import numpy as np
@@ -22,7 +8,6 @@ VIOLATION_KEYS = ("overlap", "out_of_bounds", "floating", "fragile_support", "ov
 
 
 class Report:
-    """Hasil pemeriksaan satu State."""
     __slots__ = ("overlap", "out_of_bounds", "floating", "fragile_support", "overweight",
                  "overweight_trucks", "weight_per_truck", "inside")
 
@@ -72,14 +57,12 @@ def check_state(problem: Problem, state: State) -> Report:
                 report.floating += 1
             continue
 
-        # xy[i, j]: alas i dan alas j beririsan dengan luas > 0
         xy = ((x[:, None] < x2[None, :]) & (x[None, :] < x2[:, None])
               & (y[:, None] < y2[None, :]) & (y[None, :] < y2[:, None]))
         np.fill_diagonal(xy, False)
         zo = (z[:, None] < z2[None, :]) & (z[None, :] < z2[:, None])
         report.overlap += int((xy & zo).sum()) // 2
 
-        # beneath[i, j]: paket j tepat di bawah paket i (i bertumpu pada j)
         beneath = xy & (z2[None, :] == z[:, None])
         report.floating += int(((z > 0) & ~beneath.any(axis=1)).sum())
         frag = np.fromiter((fragile[i] for i in members), dtype=bool, count=len(members))

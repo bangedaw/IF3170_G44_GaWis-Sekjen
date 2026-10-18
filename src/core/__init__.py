@@ -1,7 +1,3 @@
-"""Core engine: model data, constraint, objective, neighbor moves, dan initial state.
-
-API publik sesuai kontrak (PEMBAGIAN_TUGAS.md bagian 3.4).
-"""
 from .initializer import random_state
 from .io import (load_problem, problem_from_dict, problem_to_dict, state_from_dict,
                  state_to_dict)
