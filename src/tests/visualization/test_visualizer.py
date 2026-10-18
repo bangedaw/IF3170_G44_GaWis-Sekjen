@@ -75,7 +75,7 @@ def test_app_find_and_load_runs():
 
 
 def test_app_render_plot_image():
-    mock_rel = f"src/tests/fixtures/mock_genetic_algorithm.json"
+    mock_rel = "src/tests/fixtures/mock_genetic_algorithm.json"
     img = app.render_plot_image_bytes(mock_rel, plot_type="ga")
     assert len(img) > 1000
     assert img[:8] == b"\x89PNG\r\n\x1a\n"
