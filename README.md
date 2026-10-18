@@ -94,8 +94,8 @@ docs/                     laporan (PDF)
 - **Penalti:** tiap pelanggaran dihukum sebesar skor paket terbesar, dan kelebihan berat dihukum sebanding rasio skor per berat terbesar.
 
 ## Pembagian tugas
-| Anggota | Tanggung jawab |
-|---|---|
-| Edo | *Core engine* (model data, constraint, objective termasuk Bonus 1, neighbor moves, initial state, multi-truk di core, generator dan data uji), modul plot, README |
-| Miguel | Kelas dasar algoritma dan format hasil run, seluruh varian Hill-climbing (Bonus 2), Simulated Annealing, CLI `main.py`, experiment runner, rekap hasil |
-| Rere | Genetic Algorithm, visualisasi 3D state, aplikasi viewer hasil eksperimen |
+| Nama | NIM | Tanggung jawab |
+|---|---|--|
+| Edward David Rumahorbo | 1352436 | *Core engine* (model data, constraint, objective termasuk Bonus 1, neighbor moves, initial state, multi-truk di core, generator dan data uji), modul plot, README |
+| Miguel Rangga Deardo Sinaga | 13524069 | Kelas dasar algoritma dan format hasil run, seluruh varian Hill-climbing (Bonus 2), Simulated Annealing, CLI `main.py`, experiment runner, rekap hasil |
+| Reysha Syafitri Mulya Ramadhan | 13524137 | Genetic Algorithm, visualisasi 3D state, aplikasi viewer hasil eksperimen |
