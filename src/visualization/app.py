@@ -128,6 +128,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
     header h1 { font-size: 1.1rem; font-weight: 600; white-space: nowrap; }
     header label { margin-left: auto; font-size: 0.85rem; }
+    header button {
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 4px;
+      background: transparent;
+      color: #fff;
+      font: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    header button:disabled { opacity: 0.4; cursor: default; }
     select {
       width: min(560px, 55vw);
       padding: 6px 10px;
@@ -146,6 +157,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       gap: 16px;
     }
     h2 { font-size: 0.95rem; font-weight: 600; }
+    .run-title { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .run-title h2 { font-size: 1.2rem; }
+    .run-title span { color: var(--muted); font-size: 0.85rem; }
+    .run-title span.error { color: var(--bad); }
+    main.loading > .summary, main.loading > .views, main.loading > .plot { opacity: 0.45; }
     .summary {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -235,10 +251,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <header>
     <h1>Mejiro Express</h1>
     <label for="runSelect">Run</label>
+    <button type="button" id="prevRun">Sebelumnya</button>
     <select id="runSelect"></select>
+    <button type="button" id="nextRun">Berikutnya</button>
   </header>
 
   <main>
+    <section class="run-title"><h2 id="runTitle"></h2><span id="runMeta"></span></section>
     <section class="summary" id="summary"></section>
     <div class="tabs" id="truckTabs"></div>
 
@@ -268,6 +287,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     const FRAGILE_COLOR = 0xc8102e;
     let currentRun = null;
     let selectedTruck = 0;
+    let runs = [];
+    let requestId = 0;
+    let plotTimer = null;
+    const PLOT_DELAY_MS = 150;
     const viewInit = createViewer('canvasInit', 'tipInit');
     const viewFinal = createViewer('canvasFinal', 'tipFinal');
 
@@ -452,26 +475,69 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       renderTabs(final_summary.trucks);
       renderState(initial_summary, 'Init', viewInit);
       renderState(final_summary, 'Final', viewFinal);
-      document.getElementById('plotImage').src =
-        `/api/plot?path=${encodeURIComponent(document.getElementById('runSelect').value)}&t=${Date.now()}`;
+    }
+
+    function setLoading(on) {
+      document.querySelector('main').classList.toggle('loading', on);
+    }
+
+    function showRunHeader() {
+      const select = document.getElementById('runSelect');
+      const run = runs[select.selectedIndex];
+      document.getElementById('runTitle').textContent = `${run.label}, seed ${run.seed}`;
+      const meta = document.getElementById('runMeta');
+      meta.className = '';
+      meta.textContent = `Folder ${run.folder} | run ${select.selectedIndex + 1} dari ${runs.length}`;
+      document.getElementById('prevRun').disabled = select.selectedIndex === 0;
+      document.getElementById('nextRun').disabled = select.selectedIndex === runs.length - 1;
     }
 
     async function loadRun(path) {
-      const res = await fetch(`/api/run?path=${encodeURIComponent(path)}`);
-      currentRun = await res.json();
-      updateUI();
+      const id = ++requestId;
+      clearTimeout(plotTimer);
+      showRunHeader();
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/run?path=${encodeURIComponent(path)}`);
+        const data = await res.json();
+        if (id !== requestId) return;
+        if (data.error) throw new Error(data.error);
+        currentRun = data;
+        updateUI();
+        const img = document.getElementById('plotImage');
+        img.onload = img.onerror = () => { if (id === requestId) setLoading(false); };
+        plotTimer = setTimeout(() => {
+          img.src = `/api/plot?path=${encodeURIComponent(path)}&t=${Date.now()}`;
+        }, PLOT_DELAY_MS);
+      } catch (err) {
+        if (id !== requestId) return;
+        setLoading(false);
+        const meta = document.getElementById('runMeta');
+        meta.className = 'error';
+        meta.textContent = `Gagal memuat run: ${err.message}`;
+      }
     }
 
     async function loadRuns() {
-      const runs = await (await fetch('/api/runs')).json();
+      runs = await (await fetch('/api/runs')).json();
       const select = document.getElementById('runSelect');
       runs.forEach(r => {
         const opt = el('option', '', `[${r.folder}] ${r.label}, seed ${r.seed}`);
         opt.value = r.path;
         select.appendChild(opt);
       });
+      const open = (index) => {
+        select.selectedIndex = index;
+        loadRun(runs[index].path);
+      };
       select.addEventListener('change', () => loadRun(select.value));
-      if (runs.length > 0) loadRun(runs[0].path);
+      document.getElementById('prevRun').addEventListener('click', () => open(select.selectedIndex - 1));
+      document.getElementById('nextRun').addEventListener('click', () => open(select.selectedIndex + 1));
+      if (runs.length > 0) {
+        open(0);
+      } else {
+        document.getElementById('runTitle').textContent = 'Tidak ada hasil run';
+      }
     }
 
     window.addEventListener('DOMContentLoaded', loadRuns);
@@ -488,6 +554,12 @@ class VisualizerHandler(BaseHTTPRequestHandler):
         pass  # Suppress default request logging to keep console clean
 
     def do_GET(self):
+        try:
+            self._route()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+
+    def _route(self):
         parsed = urlparse(self.path)
         qs = parse_qs(parsed.query)
 
@@ -508,6 +580,8 @@ class VisualizerHandler(BaseHTTPRequestHandler):
             try:
                 data = load_run_details(rel_path)
                 self._send_json(data)
+            except (BrokenPipeError, ConnectionResetError):
+                raise
             except Exception as e:
                 self._send_json({"error": str(e)}, status=400)
             return
@@ -522,6 +596,8 @@ class VisualizerHandler(BaseHTTPRequestHandler):
                 self.send_header("Content-Length", str(len(img_bytes)))
                 self.end_headers()
                 self.wfile.write(img_bytes)
+            except (BrokenPipeError, ConnectionResetError):
+                raise
             except Exception as e:
                 self._send_json({"error": str(e)}, status=400)
             return
