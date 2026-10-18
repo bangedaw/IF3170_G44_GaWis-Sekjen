@@ -96,408 +96,207 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mejiro Express — 3D Container Packing Visualizer</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>Mejiro Express</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <style>
     :root {
-      --bg: #0b0f19;
-      --surface: #111827;
-      --surface-border: #1f2937;
-      --surface-hover: #1e293b;
-      --primary: #3b82f6;
-      --primary-glow: rgba(59, 130, 246, 0.25);
-      --accent: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --radius: 12px;
+      --bg: #f4f6fa;
+      --surface: #ffffff;
+      --border: #d5dbe6;
+      --primary: #0033a0;
+      --text: #0a1f44;
+      --muted: #5f6b7e;
+      --good: #1b7f4b;
+      --bad: #c8102e;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
-      overflow-x: hidden;
+      font-size: 14px;
     }
     header {
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--surface-border);
-      padding: 14px 28px;
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 20px;
+      gap: 16px;
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #2563eb, #10b981);
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      font-size: 20px;
-      box-shadow: 0 4px 12px var(--primary-glow);
-    }
-    .brand h1 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      background: linear-gradient(to right, #ffffff, #93c5fd);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .brand p { font-size: 0.75rem; color: var(--text-muted); }
-
-    .selector-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      max-width: 650px;
-    }
+    header h1 { font-size: 1.1rem; font-weight: 600; white-space: nowrap; }
+    header label { margin-left: auto; font-size: 0.85rem; }
     select {
-      flex: 1;
-      background: #0f172a;
-      color: #fff;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-size: 0.85rem;
-      font-family: inherit;
-      outline: none;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
-
-    .main-container {
-      padding: 24px 28px;
-      max-width: 1600px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-    }
-    .metric-card {
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      position: relative;
-      overflow: hidden;
-    }
-    .metric-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--primary);
-      opacity: 0.7;
-    }
-    .metric-card.success::before { background: var(--accent); }
-    .metric-card.warning::before { background: var(--warning); }
-    .metric-card.danger::before { background: var(--danger); }
-    .metric-label { font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; letter-spacing: 0.05em; }
-    .metric-val { font-size: 1.35rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
-    .metric-sub { font-size: 0.75rem; color: var(--text-muted); }
-
-    .truck-tabs {
-      display: flex;
-      gap: 8px;
-      border-bottom: 1px solid var(--surface-border);
-      padding-bottom: 10px;
-      align-items: center;
-    }
-    .tab-btn {
-      background: #1e293b;
-      color: var(--text-muted);
-      border: 1px solid transparent;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tab-btn.active {
-      background: var(--primary);
-      color: #fff;
-      box-shadow: 0 2px 8px var(--primary-glow);
-    }
-
-    .viewers-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    @media (max-width: 1024px) {
-      .viewers-row { grid-template-columns: 1fr; }
-    }
-    .viewport-box {
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    }
-    .viewport-header {
-      padding: 12px 18px;
-      background: #0f172a;
-      border-bottom: 1px solid var(--surface-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .viewport-title {
-      font-size: 0.88rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .badge {
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-weight: 600;
-    }
-    .badge-feasible { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-infeasible { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .viewport-canvas {
-      width: 100%;
-      height: 480px;
-      position: relative;
-      background: radial-gradient(circle at center, #1e293b 0%, #0b0f19 100%);
-    }
-    .viewport-tooltip {
-      position: absolute;
-      pointer-events: none;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid #3b82f6;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 0.75rem;
-      color: #fff;
-      display: none;
-      z-index: 10;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .controls-hint {
-      position: absolute;
-      bottom: 10px;
-      left: 12px;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      background: rgba(0,0,0,0.5);
-      padding: 4px 8px;
+      width: min(560px, 55vw);
+      padding: 6px 10px;
+      border: 1px solid var(--border);
       border-radius: 4px;
-      pointer-events: none;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
     }
-
-    .bottom-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    @media (max-width: 1024px) {
-      .bottom-section { grid-template-columns: 1fr; }
-    }
-    .panel-card {
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 24px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
-    .panel-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      border-bottom: 1px solid var(--surface-border);
-      padding-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .package-grid {
+    h2 { font-size: 0.95rem; font-weight: 600; }
+    .summary {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 10px;
-      max-height: 280px;
-      overflow-y: auto;
-      padding-right: 4px;
     }
-    .pkg-chip {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 8px 10px;
+    .metric {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px 12px;
+    }
+    .metric span { display: block; font-size: 0.75rem; color: var(--muted); }
+    .metric strong { font-size: 1rem; font-weight: 600; word-break: break-word; }
+    .metric.bad strong { color: var(--bad); }
+    .metric.good strong { color: var(--good); }
+    .tabs { display: flex; gap: 6px; align-items: center; }
+    .tabs:empty { display: none; }
+    .tabs button {
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+    }
+    .tabs button.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .views { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 1000px) { .views { grid-template-columns: 1fr; } }
+    .view {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .view-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .badge { font-size: 0.8rem; color: var(--muted); }
+    .badge.good { color: var(--good); }
+    .badge.bad { color: var(--bad); }
+    .canvas { position: relative; height: 440px; background: #eef2f8; }
+    .tooltip {
+      position: absolute;
+      display: none;
+      pointer-events: none;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      z-index: 5;
+      white-space: nowrap;
+    }
+    .view-foot { padding: 8px 12px; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .view-foot p { color: var(--muted); }
+    .outside { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; max-height: 84px; overflow-y: auto; }
+    .outside b { font-weight: 600; margin-right: 4px; }
+    .chip {
+      padding: 1px 7px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 0.78rem;
+      background: var(--bg);
+    }
+    .chip.fragile { border-color: var(--bad); color: var(--bad); }
+    .plot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      font-size: 0.74rem;
-    }
-    .pkg-chip.fragile {
-      border-color: #ef4444;
-      background: rgba(239, 68, 68, 0.08);
-    }
-    .pkg-chip-head {
-      display: flex;
+      gap: 8px;
       align-items: center;
-      justify-content: space-between;
-      font-weight: 700;
     }
-
-    .plot-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #0f172a;
-      border-radius: 8px;
-      overflow: hidden;
-      padding: 10px;
-      min-height: 280px;
-    }
-    .plot-container img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 6px;
-    }
+    .plot h2 { align-self: flex-start; }
+    .plot img { max-width: 100%; height: auto; }
+    .legend { color: var(--muted); font-size: 0.8rem; }
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">
-      <div class="brand-logo">🚚</div>
-      <div>
-        <h1>Mejiro Express — Visualizer</h1>
-        <p>3D Container Packing & Local Search Results</p>
-      </div>
-    </div>
-    <div class="selector-bar">
-      <label for="runSelect" style="font-size: 0.8rem; font-weight:600; color:var(--text-muted);">Pilih Run:</label>
-      <select id="runSelect"></select>
-    </div>
+    <h1>Mejiro Express</h1>
+    <label for="runSelect">Run</label>
+    <select id="runSelect"></select>
   </header>
 
-  <div class="main-container">
-    <div class="metrics-grid" id="metricsGrid">
-      <div class="metric-card"><div class="metric-label">Algoritma</div><div class="metric-val" id="mAlgo">-</div></div>
-      <div class="metric-card success"><div class="metric-label">Final Objective</div><div class="metric-val" id="mFinalObj">-</div><div class="metric-sub" id="mInitObj">Awal: -</div></div>
-      <div class="metric-card"><div class="metric-label">Total Nilai Paket</div><div class="metric-val" id="mFinalVal">-</div><div class="metric-sub" id="mInsideCount">-</div></div>
-      <div class="metric-card" id="mFeasibleCard"><div class="metric-label">Status Solusi</div><div class="metric-val" id="mFeasible">-</div><div class="metric-sub" id="mViolations">-</div></div>
-      <div class="metric-card"><div class="metric-label">Waktu Eksekusi</div><div class="metric-val" id="mDuration">-</div><div class="metric-sub" id="mIterations">-</div></div>
-    </div>
+  <main>
+    <section class="summary" id="summary"></section>
+    <div class="tabs" id="truckTabs"></div>
 
-    <div class="truck-tabs" id="truckTabs">
-      <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-right:6px;">Truk:</span>
-    </div>
-
-    <div class="viewers-row">
-      <div class="viewport-box">
-        <div class="viewport-header">
-          <div class="viewport-title">🏁 State Awal (Initial)</div>
-          <span class="badge" id="badgeInit">-</span>
-        </div>
-        <div class="viewport-canvas" id="canvasInit">
-          <div class="viewport-tooltip" id="tipInit"></div>
-          <div class="controls-hint">Orbit: Drag kiri | Zoom: Scroll | Pan: Drag kanan</div>
-        </div>
+    <section class="views">
+      <div class="view">
+        <div class="view-head"><h2>State awal</h2><span class="badge" id="badgeInit"></span></div>
+        <div class="canvas" id="canvasInit"><div class="tooltip" id="tipInit"></div></div>
+        <div class="view-foot"><p id="infoInit"></p><div class="outside" id="outsideInit"></div></div>
       </div>
-
-      <div class="viewport-box">
-        <div class="viewport-header">
-          <div class="viewport-title">🏆 State Akhir (Final Solusi)</div>
-          <span class="badge" id="badgeFinal">-</span>
-        </div>
-        <div class="viewport-canvas" id="canvasFinal">
-          <div class="viewport-tooltip" id="tipFinal"></div>
-          <div class="controls-hint">Orbit: Drag kiri | Zoom: Scroll | Pan: Drag kanan</div>
-        </div>
+      <div class="view">
+        <div class="view-head"><h2>State akhir</h2><span class="badge" id="badgeFinal"></span></div>
+        <div class="canvas" id="canvasFinal"><div class="tooltip" id="tipFinal"></div></div>
+        <div class="view-foot"><p id="infoFinal"></p><div class="outside" id="outsideFinal"></div></div>
       </div>
-    </div>
+    </section>
 
-    <div class="bottom-section">
-      <div class="panel-card">
-        <div class="panel-title">
-          <span>📦 Paket di Luar Peti Kemas (Unassigned)</span>
-          <span style="font-size:0.75rem; font-weight:600; color:var(--text-muted);" id="outsideCountLabel">0 paket</span>
-        </div>
-        <div class="package-grid" id="outsideGrid"></div>
-      </div>
+    <section class="plot">
+      <h2>Grafik hasil pencarian</h2>
+      <img id="plotImage" alt="Grafik hasil pencarian">
+    </section>
 
-      <div class="panel-card">
-        <div class="panel-title">
-          <span>📈 Grafik Riwayat Optimasi (plots.py)</span>
-          <span style="font-size:0.75rem; font-weight:600; color:var(--primary);" id="plotTitle">Convergence</span>
-        </div>
-        <div class="plot-container">
-          <img id="plotImage" src="" alt="Plot pencarian">
-        </div>
-      </div>
-    </div>
-  </div>
+    <p class="legend">Merah: paket fragile. Drag kiri untuk memutar, scroll untuk zoom, drag kanan untuk menggeser.</p>
+  </main>
 
   <script>
-    let currentRunData = null;
-    let selectedTruckIdx = 0;
-    const sceneInit = create3DViewer('canvasInit', 'tipInit');
-    const sceneFinal = create3DViewer('canvasFinal', 'tipFinal');
+    const PALETTE = [0x0033a0, 0xf2b01e, 0x4da6e8, 0x0a1f44, 0xe8702a, 0x8a97a8, 0x1b998b, 0x6c8ebf];
+    const FRAGILE_COLOR = 0xc8102e;
+    let currentRun = null;
+    let selectedTruck = 0;
+    const viewInit = createViewer('canvasInit', 'tipInit');
+    const viewFinal = createViewer('canvasFinal', 'tipFinal');
 
-    function create3DViewer(containerId, tooltipId) {
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function createViewer(containerId, tooltipId) {
       const container = document.getElementById(containerId);
       const tooltip = document.getElementById(tooltipId);
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+      const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(width, height);
+      renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.setPixelRatio(window.devicePixelRatio);
       container.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
-      controls.dampingFactor = 0.08;
+      scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+      const light = new THREE.DirectionalLight(0xffffff, 0.6);
+      light.position.set(20, 40, 30);
+      scene.add(light);
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
-      scene.add(ambientLight);
-      const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-      dirLight.position.set(20, 40, 30);
-      scene.add(dirLight);
-
-      const truckGroup = new THREE.Group();
-      scene.add(truckGroup);
-
+      const group = new THREE.Group();
+      scene.add(group);
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
 
@@ -505,215 +304,177 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         const rect = container.getBoundingClientRect();
         mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
         mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
-
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(truckGroup.children, true);
-        if (intersects.length > 0 && intersects[0].object.userData.pkg) {
-          const p = intersects[0].object.userData.pkg;
-          tooltip.style.display = 'block';
-          tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
-          tooltip.style.top = (e.clientY - rect.top + 15) + 'px';
-          tooltip.innerHTML = `<strong>${p.id}</strong> ${p.is_fragile ? '⚠️ FRAGILE' : ''}<br>` +
-                              `Nilai: ${p.value} | Berat: ${p.weight}<br>` +
-                              `Dimensi: ${p.dims.join('x')} | ETA: ${p.eta} hari<br>` +
-                              `Posisi: (${p.x}, ${p.y}, ${p.z}) Orientasi: ${p.orientation}`;
-        } else {
+        const hit = raycaster.intersectObjects(group.children, true).find(h => h.object.userData.pkg);
+        if (!hit) {
           tooltip.style.display = 'none';
+          return;
         }
+        const p = hit.object.userData.pkg;
+        tooltip.style.display = 'block';
+        tooltip.style.left = (e.clientX - rect.left + 14) + 'px';
+        tooltip.style.top = (e.clientY - rect.top + 14) + 'px';
+        tooltip.replaceChildren(
+          el('strong', '', p.id + (p.is_fragile ? ' (fragile)' : '')),
+          el('div', '', `Value ${p.value}, berat ${p.weight}, ETA ${p.eta}`),
+          el('div', '', `Dimensi ${p.dims.join(' x ')}`),
+          el('div', '', `Posisi (${p.x}, ${p.y}, ${p.z})`)
+        );
       });
-
       container.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
 
       window.addEventListener('resize', () => {
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        camera.aspect = w / h;
+        camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
+        renderer.setSize(container.clientWidth, container.clientHeight);
       });
 
-      function animate() {
+      (function animate() {
         requestAnimationFrame(animate);
         controls.update();
         renderer.render(scene, camera);
-      }
-      animate();
+      })();
 
-      return { scene, camera, controls, truckGroup };
+      return { camera, controls, group };
     }
 
-    function renderTruckToViewer(viewer, truck, packages) {
-      const group = viewer.truckGroup;
-      while (group.children.length > 0) {
-        group.remove(group.children[0]);
-      }
-
+    function renderTruck(view, truck, packages) {
+      const group = view.group;
+      while (group.children.length > 0) group.remove(group.children[0]);
       if (!truck) return;
-      const w = truck.dimensions.w;
-      const l = truck.dimensions.l;
-      const h = truck.dimensions.h;
+      const { w, l, h } = truck.dimensions;
 
-      // Container bounding box wireframe
-      const boxGeo = new THREE.BoxGeometry(w, h, l);
-      const wireMat = new THREE.LineBasicMaterial({ color: 0x64748b, linewidth: 2 });
-      const wire = new THREE.LineSegments(new THREE.EdgesGeometry(boxGeo), wireMat);
-      wire.position.set(w / 2, h / 2, l / 2);
-      group.add(wire);
+      const frame = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, l)),
+        new THREE.LineBasicMaterial({ color: 0x334155 })
+      );
+      frame.position.set(w / 2, h / 2, l / 2);
+      group.add(frame);
 
-      // Bottom grid floor
-      const grid = new THREE.GridHelper(Math.max(w, l), Math.max(w, l), 0x334155, 0x1e293b);
+      const grid = new THREE.GridHelper(Math.max(w, l), Math.max(w, l), 0xb6c0d0, 0xd5dbe6);
       grid.position.set(w / 2, 0, l / 2);
       group.add(grid);
 
-      // Packages
-      const palette = [0x0033a0, 0xf2b01e, 0x0a8754, 0x7b2cbf, 0xe8702a, 0x0096c7, 0x588157, 0x3a0ca3];
-
-      packages.forEach((p, idx) => {
-        const dx = p.dims[0];
-        const dy = p.dims[1];
-        const dz = p.dims[2];
-
+      packages.forEach((p, i) => {
+        const [dx, dy, dz] = p.dims;
         const geo = new THREE.BoxGeometry(dx, dz, dy);
-        const col = p.is_fragile ? 0xd90429 : palette[idx % palette.length];
-        const mat = new THREE.MeshStandardMaterial({
-          color: col,
-          roughness: 0.35,
-          metalness: 0.1,
+        const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+          color: p.is_fragile ? FRAGILE_COLOR : PALETTE[i % PALETTE.length],
+          roughness: 0.5,
           transparent: true,
-          opacity: 0.88,
-        });
-        const mesh = new THREE.Mesh(geo, mat);
+          opacity: 0.92
+        }));
         mesh.position.set(p.x + dx / 2, p.z + dz / 2, p.y + dy / 2);
         mesh.userData.pkg = p;
-
-        const edgeGeo = new THREE.EdgesGeometry(geo);
-        const edgeMat = new THREE.LineBasicMaterial({
-          color: p.is_fragile ? 0xfef08a : 0x0f172a,
-          linewidth: p.is_fragile ? 2 : 1
-        });
-        const edgeMesh = new THREE.LineSegments(edgeGeo, edgeMat);
-        mesh.add(edgeMesh);
-
+        mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: 0x0a1f44 })));
         group.add(mesh);
       });
 
-      // Fit camera
-      const maxDim = Math.max(w, l, h);
-      viewer.camera.position.set(w * 1.6, h * 2.2, l * 2.4);
-      viewer.controls.target.set(w / 2, h / 2, l / 2);
-      viewer.camera.lookAt(w / 2, h / 2, l / 2);
+      view.camera.position.set(w * 1.6, h * 2.2, l * 2.4);
+      view.controls.target.set(w / 2, h / 2, l / 2);
+      view.camera.lookAt(w / 2, h / 2, l / 2);
     }
 
-    async function loadRunsList() {
-      const res = await fetch('/api/runs');
-      const runs = await res.json();
-      const sel = document.getElementById('runSelect');
-      sel.innerHTML = '';
-      runs.forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r.path;
-        opt.textContent = `[${r.folder}] ${r.label} (seed ${r.seed}, obj: ${r.final_objective.toFixed(1)})`;
-        sel.appendChild(opt);
-      });
-
-      if (runs.length > 0) {
-        sel.value = runs[0].path;
-        loadRun(runs[0].path);
+    function extraRows(meta) {
+      const e = meta.extra || {};
+      const rows = [];
+      if (e.max_sideways !== undefined) rows.push(['Sideways move terpakai', `${e.sideways_used} / ${e.max_sideways}`]);
+      if (e.restarts !== undefined) {
+        rows.push(['Restart', `${e.restarts} / ${e.max_restart}`]);
+        rows.push(['Iterasi per restart', (e.iterations_per_restart || []).join(', ')]);
       }
+      if (e.stuck_count !== undefined) rows.push(['Stuck di local optima', e.stuck_count]);
+      if (e.population_size !== undefined) {
+        rows.push(['Populasi', e.population_size]);
+        rows.push(['Generasi', e.generations]);
+      }
+      return rows;
+    }
 
-      sel.addEventListener('change', () => loadRun(sel.value));
+    function renderSummary(meta) {
+      const violations = Object.entries(meta.final_violations || {})
+        .filter(([, v]) => v > 0).map(([k, v]) => `${k} ${v}`).join(', ');
+      const rows = [
+        ['Algoritma', meta.label || meta.algorithm, ''],
+        ['Objective awal', meta.initial_objective.toFixed(1), ''],
+        ['Objective akhir', meta.final_objective.toFixed(1), ''],
+        ['Value akhir', meta.final_value.toFixed(0), ''],
+        ['Status', meta.feasible ? 'Feasible' : `Tidak feasible: ${violations}`, meta.feasible ? 'good' : 'bad'],
+        ['Durasi', `${meta.duration_sec.toFixed(2)} detik`, ''],
+        ['Iterasi', meta.iterations, ''],
+        ...extraRows(meta).map(([k, v]) => [k, v, ''])
+      ];
+      document.getElementById('summary').replaceChildren(...rows.map(([label, value, cls]) => {
+        const card = el('div', 'metric ' + cls);
+        card.append(el('span', '', label), el('strong', '', String(value)));
+        return card;
+      }));
+    }
+
+    function renderState(summary, suffix, view) {
+      const badge = document.getElementById('badge' + suffix);
+      badge.className = 'badge ' + (summary.feasible ? 'good' : 'bad');
+      badge.textContent = `Value ${summary.total_value.toFixed(0)} | ${summary.feasible ? 'Feasible' : 'Tidak feasible'}`;
+
+      const truck = summary.trucks[selectedTruck];
+      document.getElementById('info' + suffix).textContent =
+        `Truk ${truck.id}: ${truck.package_count} paket, berat ${truck.current_weight} / ${truck.max_capacity}, value ${truck.value.toFixed(0)}`;
+
+      const outside = summary.outside_packages;
+      document.getElementById('outside' + suffix).replaceChildren(
+        el('b', '', `Di luar truk (${outside.length}):`),
+        ...outside.map(p => {
+          const chip = el('span', 'chip' + (p.is_fragile ? ' fragile' : ''), p.id);
+          chip.title = `Value ${p.value}, berat ${p.weight}, dimensi ${p.dims.join(' x ')}, ETA ${p.eta}`;
+          return chip;
+        })
+      );
+
+      renderTruck(view, truck, summary.inside_packages.filter(p => p.truck === selectedTruck));
+    }
+
+    function renderTabs(trucks) {
+      const tabs = document.getElementById('truckTabs');
+      tabs.replaceChildren();
+      if (trucks.length < 2) return;
+      trucks.forEach((t, i) => {
+        const btn = el('button', i === selectedTruck ? 'active' : '', `Truk ${t.id}`);
+        btn.onclick = () => { selectedTruck = i; updateUI(); };
+        tabs.appendChild(btn);
+      });
+    }
+
+    function updateUI() {
+      if (!currentRun) return;
+      const { metadata, initial_summary, final_summary } = currentRun;
+      if (selectedTruck >= final_summary.trucks.length) selectedTruck = 0;
+      renderSummary(metadata);
+      renderTabs(final_summary.trucks);
+      renderState(initial_summary, 'Init', viewInit);
+      renderState(final_summary, 'Final', viewFinal);
+      document.getElementById('plotImage').src =
+        `/api/plot?path=${encodeURIComponent(document.getElementById('runSelect').value)}&t=${Date.now()}`;
     }
 
     async function loadRun(path) {
       const res = await fetch(`/api/run?path=${encodeURIComponent(path)}`);
-      currentRunData = await res.json();
+      currentRun = await res.json();
       updateUI();
     }
 
-    function updateUI() {
-      if (!currentRunData) return;
-      const meta = currentRunData.metadata;
-      const fin = currentRunData.final_summary;
-      const init = currentRunData.initial_summary;
-
-      document.getElementById('mAlgo').textContent = meta.algorithm;
-      document.getElementById('mFinalObj').textContent = meta.final_objective.toFixed(1);
-      document.getElementById('mInitObj').textContent = `Awal: ${meta.initial_objective.toFixed(1)}`;
-      document.getElementById('mFinalVal').textContent = meta.final_value.toFixed(0);
-      document.getElementById('mInsideCount').textContent = `Paket masuk: ${fin.inside_count}/${fin.total_packages}`;
-
-      const feasCard = document.getElementById('mFeasibleCard');
-      const mFeas = document.getElementById('mFeasible');
-      const mViol = document.getElementById('mViolations');
-      if (meta.feasible) {
-        feasCard.className = 'metric-card success';
-        mFeas.textContent = '✅ FEASIBLE';
-        mViol.textContent = 'Semua constraint terpenuhi';
-      } else {
-        feasCard.className = 'metric-card danger';
-        mFeas.textContent = '⚠️ TIDAK VALID';
-        const v = meta.final_violations || {};
-        mViol.textContent = Object.entries(v).filter(([k, val]) => val > 0).map(([k, val]) => `${k}:${val}`).join(' ') || 'Pelanggaran';
-      }
-
-      document.getElementById('mDuration').textContent = `${meta.duration_sec.toFixed(2)}s`;
-      document.getElementById('mIterations').textContent = `${meta.iterations} iterasi | ${meta.extra.evaluations || '-'} eval`;
-
-      const bInit = document.getElementById('badgeInit');
-      bInit.className = 'badge ' + (init.feasible ? 'badge-feasible' : 'badge-infeasible');
-      bInit.textContent = `Obj: ${init.objective.toFixed(1)} | ${init.feasible ? 'Feasible' : 'Infeasible'}`;
-
-      const bFin = document.getElementById('badgeFinal');
-      bFin.className = 'badge ' + (fin.feasible ? 'badge-feasible' : 'badge-infeasible');
-      bFin.textContent = `Obj: ${fin.objective.toFixed(1)} | ${fin.feasible ? 'Feasible' : 'Infeasible'}`;
-
-      // Truck Tabs
-      const tabs = document.getElementById('truckTabs');
-      tabs.innerHTML = '<span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-right:6px;">Pilih Truk:</span>';
-      fin.trucks.forEach((t, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'tab-btn' + (idx === selectedTruckIdx ? ' active' : '');
-        btn.textContent = `Truk ${t.id} (${t.value.toFixed(0)} pts, ${t.current_weight}/${t.max_capacity} kg)`;
-        btn.onclick = () => {
-          selectedTruckIdx = idx;
-          updateUI();
-        };
-        tabs.appendChild(btn);
+    async function loadRuns() {
+      const runs = await (await fetch('/api/runs')).json();
+      const select = document.getElementById('runSelect');
+      runs.forEach(r => {
+        const opt = el('option', '', `[${r.folder}] ${r.label}, seed ${r.seed}`);
+        opt.value = r.path;
+        select.appendChild(opt);
       });
-
-      if (selectedTruckIdx >= fin.trucks.length) selectedTruckIdx = 0;
-      const curTruck = fin.trucks[selectedTruckIdx];
-
-      // Render 3D
-      const initPkgs = (init.inside_packages || []).filter(p => p.truck === selectedTruckIdx);
-      const finPkgs = (fin.inside_packages || []).filter(p => p.truck === selectedTruckIdx);
-      renderTruckToViewer(sceneInit, curTruck, initPkgs);
-      renderTruckToViewer(sceneFinal, curTruck, finPkgs);
-
-      // Outside Packages
-      const outGrid = document.getElementById('outsideGrid');
-      outGrid.innerHTML = '';
-      document.getElementById('outsideCountLabel').textContent = `${fin.outside_packages.length} paket`;
-      fin.outside_packages.forEach(p => {
-        const chip = document.createElement('div');
-        chip.className = 'pkg-chip' + (p.is_fragile ? ' fragile' : '');
-        chip.innerHTML = `
-          <div class="pkg-chip-head">
-            <span>${p.id}</span>
-            <span>${p.is_fragile ? '⚠️' : ''}</span>
-          </div>
-          <div style="color:var(--text-muted); font-size:0.7rem;">Nilai: ${p.value} | Berat: ${p.weight}</div>
-          <div style="color:var(--text-muted); font-size:0.7rem;">Dims: ${p.dims.join('x')} | ETA: ${p.eta}h</div>
-        `;
-        outGrid.appendChild(chip);
-      });
-
-      // Update plot image
-      const plotImg = document.getElementById('plotImage');
-      plotImg.src = `/api/plot?path=${encodeURIComponent(document.getElementById('runSelect').value)}&t=${Date.now()}`;
+      select.addEventListener('change', () => loadRun(select.value));
+      if (runs.length > 0) loadRun(runs[0].path);
     }
 
-    window.addEventListener('DOMContentLoaded', loadRunsList);
+    window.addEventListener('DOMContentLoaded', loadRuns);
   </script>
 </body>
 </html>
