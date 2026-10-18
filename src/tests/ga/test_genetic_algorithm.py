@@ -35,7 +35,6 @@ def test_ga_run_knapsack(knapsack):
     assert len(result.history["max"]) == 9
     assert len(result.history["avg"]) == 9
 
-    # Max should always be >= avg
     for m, a in zip(result.history["max"], result.history["avg"]):
         assert m >= a - 1e-6
 

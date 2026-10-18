@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Any, ClassVar
 
 from algorithms.base import LocalSearch
+from core.models import State
 
 
 class GeneticAlgorithm(LocalSearch):
@@ -23,86 +24,73 @@ class GeneticAlgorithm(LocalSearch):
         "elitism": 2,
     }
 
-    def _tournament_select(self, population: list[Any], fitness: list[float]) -> Any:
+    def _tournament_select(self, population: list[State], fitness: list[float]) -> State:
         k = min(int(self.params["tournament_size"]), len(population))
         contenders = self.rng.sample(range(len(population)), k)
         winner = max(contenders, key=lambda idx: fitness[idx])
         return population[winner]
 
     def _crossover(self, parent1: Any, parent2: Any) -> tuple[Any, Any]:
-        """Uniform crossover at the package placement level."""
+        """Uniform per-placement crossover; works for State objects and generic sequences."""
         if self.rng.random() > float(self.params["crossover_rate"]):
             return parent1, parent2
 
-        is_state_model = hasattr(parent1, "placements")
-        if is_state_model:
-            from core.models import State
-            p1 = list(parent1.placements)
-            p2 = list(parent2.placements)
-            c1_items = []
-            c2_items = []
-            for i in range(len(p1)):
-                if self.rng.random() < 0.5:
-                    c1_items.append(p1[i])
-                    c2_items.append(p2[i])
-                else:
-                    c1_items.append(p2[i])
-                    c2_items.append(p1[i])
-            return State(self.problem.ids, tuple(c1_items)), State(self.problem.ids, tuple(c2_items))
-        else:
-            p1 = list(parent1)
-            p2 = list(parent2)
-            c1_items = []
-            c2_items = []
-            for i in range(len(p1)):
-                if self.rng.random() < 0.5:
-                    c1_items.append(p1[i])
-                    c2_items.append(p2[i])
-                else:
-                    c1_items.append(p2[i])
-                    c2_items.append(p1[i])
-            return tuple(c1_items), tuple(c2_items)
+        placements1 = list(parent1.placements) if hasattr(parent1, "placements") else list(parent1)
+        placements2 = list(parent2.placements) if hasattr(parent2, "placements") else list(parent2)
 
-    def _mutate(self, individual: Any) -> Any:
-        """Mutate individual using core neighbor generator."""
+        c1_items, c2_items = [], []
+        for a, b in zip(placements1, placements2):
+            if self.rng.random() < 0.5:
+                c1_items.append(a)
+                c2_items.append(b)
+            else:
+                c1_items.append(b)
+                c2_items.append(a)
+
+        if hasattr(parent1, "placements"):
+            return (
+                State(self.problem.ids, tuple(c1_items)),
+                State(self.problem.ids, tuple(c2_items)),
+            )
+        return tuple(c1_items), tuple(c2_items)
+
+    def _mutate(self, individual: State) -> State:
+        """Mutate via core random neighbor (swap, move, or rotate)."""
         if self.rng.random() < float(self.params["mutation_rate"]):
             mutated, _ = self.random_neighbor(individual)
             return mutated
         return individual
 
-    def _search(self) -> tuple[Any, Any]:
+    def _search(self) -> tuple[State, State]:
         pop_size = int(self.params["population_size"])
         generations = int(self.params["generations"])
         elitism_count = max(0, min(int(self.params["elitism"]), pop_size))
 
-        # Initial population
-        population: list[Any] = [self.random_state() for _ in range(pop_size)]
+        population: list[State] = [self.random_state() for _ in range(pop_size)]
         fitness: list[float] = [self.objective(ind) for ind in population]
 
         best_idx = max(range(pop_size), key=lambda i: fitness[i])
         initial_best = population[best_idx]
-        best_overall = initial_best
-        best_overall_score = fitness[best_idx]
+        best_overall: State = initial_best
+        best_overall_score: float = fitness[best_idx]
 
-        # Record generation 0
         self.iterations = 0
         self.record("objective", float(best_overall_score))
         self.record("max", float(max(fitness)))
         self.record("avg", float(sum(fitness) / pop_size))
 
         for gen in range(1, generations + 1):
-            ranked_indices = sorted(range(pop_size), key=lambda i: fitness[i], reverse=True)
-            new_population: list[Any] = [population[i] for i in ranked_indices[:elitism_count]]
+            ranked = sorted(range(pop_size), key=lambda i: fitness[i], reverse=True)
+            new_population: list[State] = [population[i] for i in ranked[:elitism_count]]
 
             while len(new_population) < pop_size:
-                p1 = self._tournament_select(population, fitness)
-                p2 = self._tournament_select(population, fitness)
-                c1, c2 = self._crossover(p1, p2)
-                c1 = self._mutate(c1)
-                new_population.append(c1)
+                c1, c2 = self._crossover(
+                    self._tournament_select(population, fitness),
+                    self._tournament_select(population, fitness),
+                )
+                new_population.append(self._mutate(c1))
                 if len(new_population) < pop_size:
-                    c2 = self._mutate(c2)
-                    new_population.append(c2)
+                    new_population.append(self._mutate(c2))
 
             population = new_population
             fitness = [self.objective(ind) for ind in population]
