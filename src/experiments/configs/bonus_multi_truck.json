@@ -1,0 +1,26 @@
+{
+  "name": "bonus_multi_truck",
+  "problem": "src/data/multi_truck.json",
+  "output_dir": "output/bonus_multi_truck",
+  "seeds": [1, 2, 3],
+  "runs": [
+    {
+      "algorithm": "genetic_algorithm",
+      "objective": "default",
+      "label": "ga_multi_default_pop30_gen40",
+      "params": {
+        "population_size": 30,
+        "generations": 40
+      }
+    },
+    {
+      "algorithm": "genetic_algorithm",
+      "objective": "alt",
+      "label": "ga_multi_alt_pop30_gen40",
+      "params": {
+        "population_size": 30,
+        "generations": 40
+      }
+    }
+  ]
+}

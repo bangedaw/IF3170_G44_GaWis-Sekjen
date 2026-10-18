@@ -1,0 +1,26 @@
+{
+  "name": "bonus_objective",
+  "problem": "src/data/medium.json",
+  "output_dir": "output/bonus_objective",
+  "seeds": [1, 2, 3],
+  "runs": [
+    {
+      "algorithm": "genetic_algorithm",
+      "objective": "default",
+      "label": "ga_default_pop30_gen40",
+      "params": {
+        "population_size": 30,
+        "generations": 40
+      }
+    },
+    {
+      "algorithm": "genetic_algorithm",
+      "objective": "alt",
+      "label": "ga_alt_pop30_gen40",
+      "params": {
+        "population_size": 30,
+        "generations": 40
+      }
+    }
+  ]
+}
