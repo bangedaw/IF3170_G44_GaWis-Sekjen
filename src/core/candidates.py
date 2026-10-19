@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+# Sumber: titik kandidat berbasis extreme points terinspirasi dari T. G. Crainic, G. Perboli, dan R. Tadei,
+# "Extreme Point-Based Heuristics for Three-Dimensional Bin Packing," INFORMS Journal on Computing,
+# vol. 20, no. 3, pp. 368-384, 2008.
+
 import numpy as np
 
 from .models import Placement, Problem
