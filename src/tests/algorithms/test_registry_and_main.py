@@ -6,10 +6,6 @@ import main
 from algorithms import registry
 
 
-def test_discovery_has_no_import_errors():
-    assert registry.import_errors() == {}
-
-
 def test_name_and_alias_resolve(dummy_algorithm):
     assert registry.get_algorithm("random_walk") is dummy_algorithm
     assert registry.get_algorithm("RW") is dummy_algorithm
@@ -29,12 +25,6 @@ def test_create_passes_params(dummy_algorithm, knapsack):
 def test_parse_params_combines_json_and_pairs():
     params = main.parse_params('{"t0": 100, "cooling": 0.9}', ["cooling=0.95", "return_best=true", "mode=random"])
     assert params == {"t0": 100, "cooling": 0.95, "return_best": True, "mode": "random"}
-
-
-def test_parse_params_from_file(tmp_path):
-    path = tmp_path / "params.json"
-    path.write_text('{"steps": 9}', encoding="utf-8")
-    assert main.parse_params(f"@{path}", []) == {"steps": 9}
 
 
 def test_cli_runs_and_saves(dummy_algorithm, problem_file, tmp_path, capsys):

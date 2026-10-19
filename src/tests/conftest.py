@@ -46,7 +46,5 @@ def problem_file(tmp_path, fake_core):
 def dummy_algorithm(monkeypatch, fake_core):
     from algorithms import registry
 
-    registry.discover()
-    monkeypatch.setattr(registry, "_classes", dict(registry._classes))
-    registry.register(RandomWalk)
+    monkeypatch.setitem(registry.ALGORITHMS, RandomWalk.name, RandomWalk)
     return RandomWalk

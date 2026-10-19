@@ -28,7 +28,6 @@ def problems():
 
 def test_all_miguel_algorithms_are_registered():
     assert set(QUICK_PARAMS) <= set(registry.algorithms())
-    assert registry.import_errors() == {}
 
 
 @pytest.mark.parametrize("problem_name, objective", CASES)

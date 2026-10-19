@@ -7,7 +7,6 @@ from experiments import run_experiments as runner
 
 def config(problem_file, output_dir, **overrides):
     base = {
-        "_comment": "diabaikan",
         "name": "uji",
         "output_dir": str(output_dir),
         "problem": str(problem_file),

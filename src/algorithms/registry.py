@@ -1,71 +1,35 @@
 from __future__ import annotations
 
-import inspect
-from importlib import import_module
-from pathlib import Path
-
 from algorithms.base import LocalSearch
+from algorithms.genetic_algorithm import GeneticAlgorithm
+from algorithms.hill_climbing.first_choice import FirstChoiceHC
+from algorithms.hill_climbing.random_restart import RandomRestartHC
+from algorithms.hill_climbing.sideways import SidewaysMoveHC
+from algorithms.hill_climbing.steepest_ascent import SteepestAscentHC
+from algorithms.hill_climbing.stochastic import StochasticHC
+from algorithms.simulated_annealing import SimulatedAnnealing
 
-ALGORITHMS_DIR = Path(__file__).resolve().parent
-_SKIP_MODULES = {"algorithms.base", "algorithms.registry"}
-
-_classes: dict[str, type[LocalSearch]] = {}
-_import_errors: dict[str, str] = {}
-_discovered = False
-
-
-def _key(name: str) -> str:
-    return name.strip().lower().replace("-", "_")
-
-
-def register(cls: type[LocalSearch]) -> type[LocalSearch]:
-    _classes[_key(cls.name)] = cls
-    return cls
-
-
-def discover() -> None:
-    global _discovered
-    if _discovered:
-        return
-    _discovered = True
-    for path in sorted(ALGORITHMS_DIR.rglob("*.py")):
-        module_name = ".".join(path.relative_to(ALGORITHMS_DIR.parent).with_suffix("").parts)
-        if module_name in _SKIP_MODULES:
-            continue
-        try:
-            module = import_module(module_name)
-        except Exception as exc:
-            _import_errors[module_name] = f"{type(exc).__name__}: {exc}"
-            continue
-        for _, obj in inspect.getmembers(module, inspect.isclass):
-            if issubclass(obj, LocalSearch) and obj.__module__ == module_name and not inspect.isabstract(obj):
-                register(obj)
+ALGORITHMS: dict[str, type[LocalSearch]] = {
+    cls.name: cls
+    for cls in (SteepestAscentHC, StochasticHC, SidewaysMoveHC, RandomRestartHC, FirstChoiceHC,
+                SimulatedAnnealing, GeneticAlgorithm)
+}
 
 
 def algorithms() -> dict[str, type[LocalSearch]]:
-    discover()
-    return dict(_classes)
-
-
-def import_errors() -> dict[str, str]:
-    discover()
-    return dict(_import_errors)
+    return dict(ALGORITHMS)
 
 
 def canonical_name(name: str) -> str:
-    discover()
-    key = _key(name)
-    if key in _classes:
-        return key
-    for canonical, cls in _classes.items():
-        if key in (_key(alias) for alias in cls.aliases):
+    key = name.strip().lower().replace("-", "_")
+    for canonical, cls in ALGORITHMS.items():
+        if key == canonical or key in cls.aliases:
             return canonical
-    available = ", ".join(sorted(_classes)) or "(belum ada)"
-    raise KeyError(f"Algoritma '{name}' tidak dikenal. Tersedia: {available}")
+    raise KeyError(f"Algoritma '{name}' tidak dikenal. Tersedia: {', '.join(sorted(ALGORITHMS))}")
 
 
 def get_algorithm(name: str) -> type[LocalSearch]:
-    return _classes[canonical_name(name)]
+    return ALGORITHMS[canonical_name(name)]
 
 
 def create(name: str, problem, objective: str = "default", seed: int | None = None,

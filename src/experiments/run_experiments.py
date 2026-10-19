@@ -57,16 +57,7 @@ class RunSpec:
     output_path: Path = Path()
 
 
-def _strip_comments(obj):
-    if isinstance(obj, dict):
-        return {k: _strip_comments(v) for k, v in obj.items() if not k.startswith("_")}
-    if isinstance(obj, list):
-        return [_strip_comments(v) for v in obj]
-    return obj
-
-
 def expand_config(config: dict) -> list[RunSpec]:
-    config = _strip_comments(config)
     specs = []
     for entry in config["runs"]:
         algorithm = registry.canonical_name(entry["algorithm"])

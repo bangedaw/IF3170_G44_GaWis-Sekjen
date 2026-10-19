@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import math
 
-from algorithms import registry
 from algorithms.base import LocalSearch
 from algorithms.hill_climbing.common import HillClimbing
 
@@ -14,7 +13,9 @@ class RandomRestartHC(LocalSearch):
 
     def __init__(self, problem, objective="default", seed=None, **params):
         super().__init__(problem, objective, seed, **params)
-        climber_cls = registry.get_algorithm(self.params["base_algorithm"])
+        from algorithms.registry import get_algorithm
+
+        climber_cls = get_algorithm(self.params["base_algorithm"])
         if not issubclass(climber_cls, HillClimbing):
             raise ValueError(f"{self.name}: base_algorithm harus varian Hill-climbing, bukan {climber_cls.name}")
         self._climber_cls = climber_cls

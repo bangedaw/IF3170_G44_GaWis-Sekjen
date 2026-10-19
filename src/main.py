@@ -12,8 +12,7 @@ from experiments.run_experiments import execute, load_problem_file
 def parse_params(params_json: str | None, pairs: list[str]) -> dict:
     params = {}
     if params_json:
-        text = Path(params_json[1:]).read_text(encoding="utf-8") if params_json.startswith("@") else params_json
-        params.update(json.loads(text))
+        params.update(json.loads(params_json))
     for pair in pairs:
         key, sep, value = pair.partition("=")
         if not sep:
@@ -26,13 +25,8 @@ def parse_params(params_json: str | None, pairs: list[str]) -> dict:
 
 
 def print_algorithms() -> None:
-    found = registry.algorithms()
-    for name, cls in sorted(found.items()):
+    for name, cls in sorted(registry.algorithms().items()):
         print(f"{name:22} alias: {', '.join(cls.aliases) or '-'}")
-    for module, error in registry.import_errors().items():
-        print(f"[gagal di-import] {module}: {error}")
-    if not found:
-        print("Belum ada algoritma terdaftar.")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -42,7 +36,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--algo", help="nama algoritma atau alias (lihat --list)")
     parser.add_argument("--objective", default="default", help="nama objective function (default | alt)")
     parser.add_argument("--seed", type=int, default=None)
-    parser.add_argument("--params", help="parameter algoritma sebagai JSON, atau @file.json")
+    parser.add_argument("--params", help="parameter algoritma sebagai JSON")
     parser.add_argument("--param", action="append", default=[], metavar="KEY=VALUE",
                         help="satu parameter algoritma (boleh diulang)")
     parser.add_argument("--label", help="label run (default: nama algoritma)")
