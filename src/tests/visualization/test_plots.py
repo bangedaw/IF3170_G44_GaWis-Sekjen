@@ -35,8 +35,25 @@ def test_plot_objective_draws_one_line_with_history_length():
 def test_plot_acceptance_prob_for_sa(tmp_path):
     run = load_run(fixture("mock_simulated_annealing"))
     fig = plot_acceptance_prob(run, save=tmp_path / "a.png")
-    assert len(fig.axes[0].lines[0].get_ydata()) == len(run["history"]["acceptance_prob"])
+    ax = fig.axes[0]
+    assert len(ax.collections[0].get_offsets()) == len(run["history"]["acceptance_prob"])
+    assert any("rata-rata bergulir" in line.get_label() for line in ax.lines)
     assert "stuck" in fig.axes[0].get_title() and is_png(tmp_path / "a.png")
+
+
+def test_plot_acceptance_prob_stays_readable_for_long_runs(tmp_path):
+    import random
+    rng = random.Random(1)
+    n = 40000
+    run = {"algorithm": "simulated_annealing", "history": {
+        "acceptance_prob": [rng.random() * (1 - i / n) for i in range(n)],
+        "temperature": [50 * (1 - i / n) for i in range(n)]}, "extra": {"stuck_count": 5}}
+    fig = plot_acceptance_prob(run, save=tmp_path / "long.png")
+    ax = fig.axes[0]
+    smooth = next(line for line in ax.lines if "rata-rata bergulir" in line.get_label())
+    assert len(smooth.get_ydata()) == n - n // 100 + 1
+    assert smooth.get_ydata()[0] > smooth.get_ydata()[-1]
+    assert ax.get_ylim()[1] <= 1.1 and is_png(tmp_path / "long.png")
 
 
 def test_plot_acceptance_prob_rejects_non_sa():

@@ -7,6 +7,7 @@ from pathlib import Path
 from statistics import mean, pstdev
 from typing import Callable, Iterable
 
+import numpy as np
 from matplotlib.figure import Figure
 
 PALETTE = ("#0033A0", "#F2B01E", "#4DA6E8", "#0A1F44", "#E8702A", "#8A97A8", "#1B998B", "#C8102E")
@@ -72,24 +73,42 @@ def plot_objective(run, save=None, mark_restarts: bool = True) -> Figure:
     return _finish(fig, save)
 
 
+def _rolling_mean(values, window: int) -> np.ndarray:
+    arr = np.asarray(values, dtype=float)
+    if window <= 1 or arr.size < window:
+        return arr
+    return np.convolve(arr, np.ones(window) / window, mode="valid")
+
+
 def plot_acceptance_prob(run, save=None) -> Figure:
     run = load_run(run)
     history = run["history"]
     probs = history.get("acceptance_prob")
     if probs is None:
         raise ValueError(f"{_name(run)} tidak punya history.acceptance_prob (bukan Simulated Annealing?)")
-    fig = Figure(figsize=(7, 4))
+    fig = Figure(figsize=(7.5, 4.2))
     ax = fig.subplots()
-    ax.plot(range(1, len(probs) + 1), probs, color=LINE, linewidth=0.8, alpha=0.9, label="e^(ΔE/T)")
+    ax.scatter(np.arange(1, len(probs) + 1), probs, s=3, color=LINE, alpha=0.18, linewidths=0,
+               rasterized=True, label="e^(ΔE/T) per iterasi")
+    window = max(1, len(probs) // 100)
+    if window > 1:
+        ax.plot(np.arange(window, len(probs) + 1), _rolling_mean(probs, window), color=POINT, linewidth=1.8,
+                label=f"rata-rata bergulir ({window} iterasi)")
     ax.axhline(1.0, color=MUTED, linestyle=":", linewidth=1)
+    if probs and max(probs) <= 1.0:
+        ax.set_ylim(-0.03, 1.05)
     _style(ax, "Iterasi", "e^(ΔE/T)")
+    handles, labels = ax.get_legend_handles_labels()
     temperature = history.get("temperature")
     if temperature:
         right = ax.twinx()
-        right.plot(range(1, len(temperature) + 1), temperature, color=BAND, linestyle="--", linewidth=1.2,
-                   label="temperatur")
+        right.plot(range(1, len(temperature) + 1), temperature, color=BAND, linestyle="--", linewidth=1.4,
+                   label="temperatur (sumbu kanan)")
         right.set_ylabel("Temperatur")
         right.spines["top"].set_visible(False)
+        extra_handles, extra_labels = right.get_legend_handles_labels()
+        handles, labels = handles + extra_handles, labels + extra_labels
+    ax.legend(handles, labels, loc="upper right", fontsize=8, markerscale=4, framealpha=0.95)
     stuck = run.get("extra", {}).get("stuck_count")
     suffix = f", stuck {stuck}x" if stuck is not None else ""
     ax.set_title(f"{_title(run)}: e^(ΔE/T) vs iterasi{suffix}")
