@@ -109,9 +109,3 @@ class State:
 
     def __len__(self) -> int:
         return len(self.placements)
-
-    def replace(self, changes: dict[int, Placement]) -> State:
-        items = list(self.placements)
-        for index, placement in changes.items():
-            items[index] = placement
-        return State(self.ids, tuple(items))

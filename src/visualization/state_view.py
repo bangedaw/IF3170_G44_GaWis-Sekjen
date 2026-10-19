@@ -1,9 +1,3 @@
-"""3D State Renderer and Inspector for Mejiro Express Truck Container Packing.
-
-Provides 3D container rendering (Matplotlib 3D), state metric extraction,
-multi-truck support, and structured data generation for interactive viewers.
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -43,7 +37,6 @@ def _resolve_problem_and_state(problem_input: Any, state_input: Any) -> tuple[Pr
 
 
 def _make_box_faces(x: float, y: float, z: float, dx: float, dy: float, dz: float):
-    """Return 6 quad faces for a cuboid at corner (x,y,z) with dimensions (dx,dy,dz)."""
     v = [
         (x, y, z), (x + dx, y, z), (x + dx, y + dy, z), (x, y + dy, z),
         (x, y, z + dz), (x + dx, y, z + dz), (x + dx, y + dy, z + dz), (x, y + dy, z + dz),
@@ -59,11 +52,10 @@ def _make_box_faces(x: float, y: float, z: float, dx: float, dy: float, dz: floa
 
 
 def state_summary(problem_input: Any, state_input: Any) -> dict[str, Any]:
-    """Return comprehensive state statistics, metrics, and inside/outside package lists."""
-    from algorithms.base import load_core
-    core = load_core()
+    from core.objective import evaluate
+
     problem, state = _resolve_problem_and_state(problem_input, state_input)
-    evaluation = core.evaluate(problem, state)
+    evaluation = evaluate(problem, state)
 
     packages_by_id = {p.id: p for p in problem.packages}
     truck_stats = []
@@ -127,7 +119,6 @@ def state_summary(problem_input: Any, state_input: Any) -> dict[str, Any]:
 
 
 def draw_truck_wireframe(ax, truck: Truck) -> None:
-    """Draw a wireframe outline of the truck container in 3D."""
     w, l, h = truck.w, truck.l, truck.h
     edges = [
         ([0, w], [0, 0], [0, 0]), ([w, w], [0, l], [0, 0]),
@@ -143,7 +134,6 @@ def draw_truck_wireframe(ax, truck: Truck) -> None:
 
 def render_truck_3d(ax, truck: Truck, truck_index: int, problem: Problem, state: State,
                     title: str | None = None) -> None:
-    """Render a single truck container and its placed packages on a Matplotlib 3D axis."""
     draw_truck_wireframe(ax, truck)
 
     packages_by_id = {p.id: p for p in problem.packages}
@@ -185,7 +175,6 @@ def render_truck_3d(ax, truck: Truck, truck_index: int, problem: Problem, state:
 
 def render_state_figure(problem_input: Any, state_input: Any, truck_index: int | None = None,
                         save: str | Path | None = None, title: str | None = None) -> Figure:
-    """Render a 3D Figure of all trucks (or a specific truck) in the given state."""
     problem, state = _resolve_problem_and_state(problem_input, state_input)
     summary = state_summary(problem, state)
 
@@ -226,7 +215,6 @@ def render_state_figure(problem_input: Any, state_input: Any, truck_index: int |
 def render_state_comparison(problem_input: Any, initial_state_input: Any, final_state_input: Any,
                             truck_index: int = 0, save: str | Path | None = None,
                             title: str | None = None) -> Figure:
-    """Render side-by-side Initial State vs Final State comparison in 3D."""
     problem, s_init = _resolve_problem_and_state(problem_input, initial_state_input)
     _, s_final = _resolve_problem_and_state(problem_input, final_state_input)
 
@@ -255,7 +243,6 @@ def render_state_comparison(problem_input: Any, initial_state_input: Any, final_
 
 
 def state_to_3d_data(problem_input: Any, state_input: Any) -> dict[str, Any]:
-    """Return a JSON-serialisable scene graph dict for 3D interactive viewers."""
     problem, state = _resolve_problem_and_state(problem_input, state_input)
     summary = state_summary(problem, state)
     summary["palette"] = list(PALETTE)

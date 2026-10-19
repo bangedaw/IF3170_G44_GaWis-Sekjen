@@ -559,7 +559,7 @@ class VisualizerHandler(BaseHTTPRequestHandler):
     output_dirs: list[Path] = [REPO_ROOT / "output", REPO_ROOT / "src/tests/fixtures"]
 
     def log_message(self, format, *args):
-        pass  # Suppress default request logging to keep console clean
+        pass
 
     def do_GET(self):
         try:
@@ -623,11 +623,11 @@ class VisualizerHandler(BaseHTTPRequestHandler):
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(description="Mejiro Express — Visualizer Web Application")
+    parser = argparse.ArgumentParser(description="Viewer web hasil run Mejiro Express.")
     parser.add_argument("path", nargs="?", default="output", help="Folder output atau file JSON spesifik")
     parser.add_argument("--port", type=int, default=8501, help="Port server HTTP (default: 8501)")
     parser.add_argument("--no-browser", action="store_true", help="Jangan buka browser otomatis")
-    parser.add_argument("--export-html", help="Simpan standalone dashboard ke file HTML")
+    parser.add_argument("--export-html", help="Simpan viewer mandiri ke file HTML")
     args = parser.parse_args(argv)
 
     target_path = Path(args.path)
@@ -638,7 +638,7 @@ def main(argv: list[str] | None = None) -> None:
         out_p = Path(args.export_html)
         out_p.parent.mkdir(parents=True, exist_ok=True)
         out_p.write_text(render_html(), encoding="utf-8")
-        print(f"HTML viewer exported to: {out_p}")
+        print(f"HTML viewer disimpan ke: {out_p}")
         return
 
     dirs = [target_path] if target_path.is_dir() else [target_path.parent]
@@ -647,7 +647,7 @@ def main(argv: list[str] | None = None) -> None:
 
     server = ThreadingHTTPServer(("127.0.0.1", args.port), VisualizerHandler)
     url = f"http://127.0.0.1:{args.port}"
-    print(f"=== Mejiro Express Visualizer ===")
+    print("=== Mejiro Express Visualizer ===")
     print(f"Server berjalan di: {url}")
     print("Tekan Ctrl+C untuk menghentikan server.")
 

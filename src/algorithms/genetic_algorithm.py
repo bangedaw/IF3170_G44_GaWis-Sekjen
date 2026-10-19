@@ -1,21 +1,13 @@
-"""Genetic Algorithm implementation for 3D Bin Packing / Container Loading Problem.
-
-Ref: M. L. Khodra, "Beyond Classical Search: Genetic Algorithm," YouTube, 2021.
-Inherits from algorithms.base.LocalSearch.
-"""
-
 from __future__ import annotations
-
-from typing import Any, ClassVar
 
 from algorithms.base import LocalSearch
 from core.models import State
 
 
 class GeneticAlgorithm(LocalSearch):
-    name: ClassVar[str] = "genetic_algorithm"
-    aliases: ClassVar[tuple[str, ...]] = ("ga", "genetic")
-    default_params: ClassVar[dict[str, Any]] = {
+    name = "genetic_algorithm"
+    aliases = ("ga", "genetic")
+    default_params = {
         "population_size": 30,
         "generations": 60,
         "crossover_rate": 0.8,
@@ -30,32 +22,26 @@ class GeneticAlgorithm(LocalSearch):
         winner = max(contenders, key=lambda idx: fitness[idx])
         return population[winner]
 
-    def _crossover(self, parent1: Any, parent2: Any) -> tuple[Any, Any]:
-        """Uniform per-placement crossover; works for State objects and generic sequences."""
+    def _crossover(self, parent1, parent2):
         if self.rng.random() > float(self.params["crossover_rate"]):
             return parent1, parent2
 
-        placements1 = list(parent1.placements) if hasattr(parent1, "placements") else list(parent1)
-        placements2 = list(parent2.placements) if hasattr(parent2, "placements") else list(parent2)
-
-        c1_items, c2_items = [], []
-        for a, b in zip(placements1, placements2):
+        a_items = list(parent1.placements) if hasattr(parent1, "placements") else list(parent1)
+        b_items = list(parent2.placements) if hasattr(parent2, "placements") else list(parent2)
+        items1, items2 = [], []
+        for a, b in zip(a_items, b_items):
             if self.rng.random() < 0.5:
-                c1_items.append(a)
-                c2_items.append(b)
+                items1.append(a)
+                items2.append(b)
             else:
-                c1_items.append(b)
-                c2_items.append(a)
+                items1.append(b)
+                items2.append(a)
+        if not hasattr(parent1, "placements"):
+            return tuple(items1), tuple(items2)
+        return (State(self.problem.ids, tuple(items1)),
+                State(self.problem.ids, tuple(items2)))
 
-        if hasattr(parent1, "placements"):
-            return (
-                State(self.problem.ids, tuple(c1_items)),
-                State(self.problem.ids, tuple(c2_items)),
-            )
-        return tuple(c1_items), tuple(c2_items)
-
-    def _mutate(self, individual: State) -> State:
-        """Mutate via core random neighbor (swap, move, or rotate)."""
+    def _mutate(self, individual):
         if self.rng.random() < float(self.params["mutation_rate"]):
             mutated, _ = self.random_neighbor(individual)
             return mutated

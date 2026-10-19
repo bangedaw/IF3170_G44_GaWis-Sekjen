@@ -1,7 +1,7 @@
 import pytest
 
 from core.models import Package
-from core.orientation import ORIENTATIONS, effective_dims, is_valid_orientation, rotate
+from core.orientation import ORIENTATIONS, dims_for, rotate
 
 PKG = Package("A", 2, 3, 5, 1, 1)
 
@@ -19,8 +19,8 @@ def test_six_distinct_orientations():
     ("yzx", (5, 2, 3)),
     ("zxy", (3, 5, 2)),
 ])
-def test_effective_dims(orientation, expected):
-    assert effective_dims(PKG, orientation) == expected
+def test_dims_for(orientation, expected):
+    assert dims_for(PKG.dims, orientation) == expected
 
 
 def test_rotate_swaps_the_other_two_axes():
@@ -37,7 +37,7 @@ def test_rotating_twice_is_identity(axis):
 
 def test_rotation_around_z_keeps_height():
     for orientation in ORIENTATIONS:
-        assert effective_dims(PKG, rotate(orientation, "z"))[2] == effective_dims(PKG, orientation)[2]
+        assert dims_for(PKG.dims, rotate(orientation, "z"))[2] == dims_for(PKG.dims, orientation)[2]
 
 
 def test_rotations_reach_all_six_orientations():
@@ -52,7 +52,6 @@ def test_rotations_reach_all_six_orientations():
     assert seen == set(ORIENTATIONS)
 
 
-def test_invalid_axis_and_orientation():
+def test_invalid_axis():
     with pytest.raises(ValueError):
         rotate("xyz", "w")
-    assert is_valid_orientation("yxz") and not is_valid_orientation("xxz")
