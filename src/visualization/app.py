@@ -12,6 +12,8 @@ from urllib.parse import parse_qs, urlparse
 
 SRC_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = SRC_DIR.parent
+VENDOR_DIR = Path(__file__).resolve().parent / "vendor"
+VENDOR_SCRIPTS = ("three.min.js", "OrbitControls.js")
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
@@ -97,8 +99,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mejiro Express</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!--VENDOR_SCRIPTS-->
   <style>
     :root {
       --bg: #f4f6fa;
@@ -547,6 +548,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 """
 
 
+def render_html() -> str:
+    scripts = "\n".join(
+        f"<script>\n{(VENDOR_DIR / name).read_text(encoding='utf-8')}\n</script>" for name in VENDOR_SCRIPTS
+    )
+    return HTML_TEMPLATE.replace("<!--VENDOR_SCRIPTS-->", scripts)
+
+
 class VisualizerHandler(BaseHTTPRequestHandler):
     output_dirs: list[Path] = [REPO_ROOT / "output", REPO_ROOT / "src/tests/fixtures"]
 
@@ -567,7 +575,7 @@ class VisualizerHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
-            self.wfile.write(HTML_TEMPLATE.encode("utf-8"))
+            self.wfile.write(render_html().encode("utf-8"))
             return
 
         if parsed.path == "/api/runs":
@@ -629,7 +637,7 @@ def main(argv: list[str] | None = None) -> None:
     if args.export_html:
         out_p = Path(args.export_html)
         out_p.parent.mkdir(parents=True, exist_ok=True)
-        out_p.write_text(HTML_TEMPLATE, encoding="utf-8")
+        out_p.write_text(render_html(), encoding="utf-8")
         print(f"HTML viewer exported to: {out_p}")
         return
 
