@@ -35,8 +35,25 @@ def test_plot_objective_draws_one_line_with_history_length():
 def test_plot_acceptance_prob_for_sa(tmp_path):
     run = load_run(fixture("mock_simulated_annealing"))
     fig = plot_acceptance_prob(run, save=tmp_path / "a.png")
-    assert len(fig.axes[0].lines[0].get_ydata()) == len(run["history"]["acceptance_prob"])
+    ax = fig.axes[0]
+    assert len(ax.collections[0].get_offsets()) == len(run["history"]["acceptance_prob"])
+    assert any("rata-rata bergulir" in line.get_label() for line in ax.lines)
     assert "stuck" in fig.axes[0].get_title() and is_png(tmp_path / "a.png")
+
+
+def test_plot_acceptance_prob_stays_readable_for_long_runs(tmp_path):
+    import random
+    rng = random.Random(1)
+    n = 40000
+    run = {"algorithm": "simulated_annealing", "history": {
+        "acceptance_prob": [rng.random() * (1 - i / n) for i in range(n)],
+        "temperature": [50 * (1 - i / n) for i in range(n)]}, "extra": {"stuck_count": 5}}
+    fig = plot_acceptance_prob(run, save=tmp_path / "long.png")
+    ax = fig.axes[0]
+    smooth = next(line for line in ax.lines if "rata-rata bergulir" in line.get_label())
+    assert len(smooth.get_ydata()) == n - n // 100 + 1
+    assert smooth.get_ydata()[0] > smooth.get_ydata()[-1]
+    assert ax.get_ylim()[1] <= 1.1 and is_png(tmp_path / "long.png")
 
 
 def test_plot_acceptance_prob_rejects_non_sa():
@@ -61,8 +78,19 @@ def test_plot_compare_groups_runs_by_label(tmp_path):
     runs = [load_run(fixture(n)) for n in HC]
     runs += [dict(runs[0], final_objective=runs[0]["final_objective"] + 5, duration_sec=1.0)]
     fig = plot_compare(runs, save=tmp_path / "c.png")
-    assert len(fig.axes) == 2 and is_png(tmp_path / "c.png")
+    assert len(fig.axes) == 3 and is_png(tmp_path / "c.png")
     assert len(fig.axes[0].patches) == len({r.get("label") or r["algorithm"] for r in runs})
+
+
+def test_plot_compare_value_panel_ignores_objective_scale():
+    base = load_run(fixture("mock_steepest_ascent_hc"))
+    runs = [dict(base, label="default", final_objective=100.0, final_value=100.0),
+            dict(base, label="alt", final_objective=5000.0, final_value=90.0)]
+    fig = plot_compare(runs)
+    objective, value, duration = fig.axes
+    assert [round(p.get_height()) for p in objective.patches] == [100, 5000]
+    assert [round(p.get_height()) for p in value.patches] == [100, 90]
+    assert value.get_title() == "Total value akhir" and duration.get_title() == "Durasi pencarian"
 
 
 def test_plot_compare_custom_grouping_and_empty():

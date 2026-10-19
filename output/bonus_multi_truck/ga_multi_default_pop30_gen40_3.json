@@ -1,0 +1,1428 @@
+{
+  "algorithm": "genetic_algorithm",
+  "label": "ga_multi_default_pop30_gen40",
+  "objective_name": "default",
+  "problem": {
+    "trucks": [
+      {
+        "id": "T1",
+        "dimensions": {
+          "w": 8,
+          "l": 12,
+          "h": 4
+        },
+        "max_capacity": 300
+      },
+      {
+        "id": "T2",
+        "dimensions": {
+          "w": 6,
+          "l": 10,
+          "h": 4
+        },
+        "max_capacity": 180
+      },
+      {
+        "id": "T3",
+        "dimensions": {
+          "w": 10,
+          "l": 16,
+          "h": 5
+        },
+        "max_capacity": 450
+      }
+    ],
+    "packages": [
+      {
+        "id": "P01",
+        "dimensions": {
+          "w": 5,
+          "l": 6,
+          "h": 2
+        },
+        "value": 121,
+        "weight": 37,
+        "is_fragile": false,
+        "eta": 2
+      },
+      {
+        "id": "P02",
+        "dimensions": {
+          "w": 3,
+          "l": 5,
+          "h": 2
+        },
+        "value": 98,
+        "weight": 18,
+        "is_fragile": false,
+        "eta": 3
+      },
+      {
+        "id": "P03",
+        "dimensions": {
+          "w": 4,
+          "l": 2,
+          "h": 2
+        },
+        "value": 29,
+        "weight": 11,
+        "is_fragile": false,
+        "eta": 3
+      },
+      {
+        "id": "P04",
+        "dimensions": {
+          "w": 2,
+          "l": 6,
+          "h": 2
+        },
+        "value": 39,
+        "weight": 15,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P05",
+        "dimensions": {
+          "w": 2,
+          "l": 3,
+          "h": 3
+        },
+        "value": 46,
+        "weight": 10,
+        "is_fragile": false,
+        "eta": 5
+      },
+      {
+        "id": "P06",
+        "dimensions": {
+          "w": 5,
+          "l": 6,
+          "h": 3
+        },
+        "value": 181,
+        "weight": 27,
+        "is_fragile": false,
+        "eta": 2
+      },
+      {
+        "id": "P07",
+        "dimensions": {
+          "w": 4,
+          "l": 4,
+          "h": 2
+        },
+        "value": 110,
+        "weight": 23,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P08",
+        "dimensions": {
+          "w": 4,
+          "l": 4,
+          "h": 2
+        },
+        "value": 131,
+        "weight": 26,
+        "is_fragile": false,
+        "eta": 1
+      },
+      {
+        "id": "P09",
+        "dimensions": {
+          "w": 2,
+          "l": 6,
+          "h": 2
+        },
+        "value": 71,
+        "weight": 25,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P10",
+        "dimensions": {
+          "w": 2,
+          "l": 4,
+          "h": 3
+        },
+        "value": 63,
+        "weight": 18,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P11",
+        "dimensions": {
+          "w": 2,
+          "l": 4,
+          "h": 2
+        },
+        "value": 32,
+        "weight": 11,
+        "is_fragile": true,
+        "eta": 7
+      },
+      {
+        "id": "P12",
+        "dimensions": {
+          "w": 4,
+          "l": 5,
+          "h": 2
+        },
+        "value": 126,
+        "weight": 41,
+        "is_fragile": false,
+        "eta": 1
+      },
+      {
+        "id": "P13",
+        "dimensions": {
+          "w": 5,
+          "l": 5,
+          "h": 2
+        },
+        "value": 104,
+        "weight": 36,
+        "is_fragile": true,
+        "eta": 3
+      },
+      {
+        "id": "P14",
+        "dimensions": {
+          "w": 3,
+          "l": 3,
+          "h": 3
+        },
+        "value": 44,
+        "weight": 28,
+        "is_fragile": false,
+        "eta": 3
+      },
+      {
+        "id": "P15",
+        "dimensions": {
+          "w": 3,
+          "l": 2,
+          "h": 2
+        },
+        "value": 20,
+        "weight": 19,
+        "is_fragile": true,
+        "eta": 5
+      },
+      {
+        "id": "P16",
+        "dimensions": {
+          "w": 5,
+          "l": 2,
+          "h": 3
+        },
+        "value": 121,
+        "weight": 20,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P17",
+        "dimensions": {
+          "w": 4,
+          "l": 5,
+          "h": 3
+        },
+        "value": 171,
+        "weight": 39,
+        "is_fragile": false,
+        "eta": 2
+      },
+      {
+        "id": "P18",
+        "dimensions": {
+          "w": 3,
+          "l": 3,
+          "h": 3
+        },
+        "value": 119,
+        "weight": 19,
+        "is_fragile": false,
+        "eta": 1
+      },
+      {
+        "id": "P19",
+        "dimensions": {
+          "w": 5,
+          "l": 4,
+          "h": 2
+        },
+        "value": 46,
+        "weight": 33,
+        "is_fragile": false,
+        "eta": 5
+      },
+      {
+        "id": "P20",
+        "dimensions": {
+          "w": 4,
+          "l": 3,
+          "h": 2
+        },
+        "value": 77,
+        "weight": 29,
+        "is_fragile": false,
+        "eta": 5
+      },
+      {
+        "id": "P21",
+        "dimensions": {
+          "w": 3,
+          "l": 2,
+          "h": 3
+        },
+        "value": 84,
+        "weight": 10,
+        "is_fragile": false,
+        "eta": 5
+      },
+      {
+        "id": "P22",
+        "dimensions": {
+          "w": 4,
+          "l": 6,
+          "h": 2
+        },
+        "value": 116,
+        "weight": 41,
+        "is_fragile": false,
+        "eta": 7
+      },
+      {
+        "id": "P23",
+        "dimensions": {
+          "w": 5,
+          "l": 2,
+          "h": 3
+        },
+        "value": 94,
+        "weight": 15,
+        "is_fragile": false,
+        "eta": 5
+      },
+      {
+        "id": "P24",
+        "dimensions": {
+          "w": 4,
+          "l": 2,
+          "h": 2
+        },
+        "value": 59,
+        "weight": 9,
+        "is_fragile": false,
+        "eta": 2
+      },
+      {
+        "id": "P25",
+        "dimensions": {
+          "w": 2,
+          "l": 5,
+          "h": 2
+        },
+        "value": 45,
+        "weight": 12,
+        "is_fragile": false,
+        "eta": 3
+      },
+      {
+        "id": "P26",
+        "dimensions": {
+          "w": 5,
+          "l": 2,
+          "h": 2
+        },
+        "value": 55,
+        "weight": 22,
+        "is_fragile": false,
+        "eta": 5
+      },
+      {
+        "id": "P27",
+        "dimensions": {
+          "w": 3,
+          "l": 2,
+          "h": 3
+        },
+        "value": 67,
+        "weight": 26,
+        "is_fragile": true,
+        "eta": 2
+      },
+      {
+        "id": "P28",
+        "dimensions": {
+          "w": 2,
+          "l": 4,
+          "h": 2
+        },
+        "value": 55,
+        "weight": 26,
+        "is_fragile": false,
+        "eta": 1
+      },
+      {
+        "id": "P29",
+        "dimensions": {
+          "w": 2,
+          "l": 5,
+          "h": 3
+        },
+        "value": 76,
+        "weight": 16,
+        "is_fragile": true,
+        "eta": 5
+      },
+      {
+        "id": "P30",
+        "dimensions": {
+          "w": 3,
+          "l": 6,
+          "h": 2
+        },
+        "value": 85,
+        "weight": 25,
+        "is_fragile": false,
+        "eta": 3
+      },
+      {
+        "id": "P31",
+        "dimensions": {
+          "w": 2,
+          "l": 4,
+          "h": 3
+        },
+        "value": 104,
+        "weight": 32,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P32",
+        "dimensions": {
+          "w": 4,
+          "l": 2,
+          "h": 3
+        },
+        "value": 76,
+        "weight": 31,
+        "is_fragile": false,
+        "eta": 2
+      },
+      {
+        "id": "P33",
+        "dimensions": {
+          "w": 5,
+          "l": 2,
+          "h": 3
+        },
+        "value": 125,
+        "weight": 33,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P34",
+        "dimensions": {
+          "w": 5,
+          "l": 4,
+          "h": 3
+        },
+        "value": 175,
+        "weight": 26,
+        "is_fragile": false,
+        "eta": 3
+      },
+      {
+        "id": "P35",
+        "dimensions": {
+          "w": 5,
+          "l": 4,
+          "h": 3
+        },
+        "value": 117,
+        "weight": 27,
+        "is_fragile": false,
+        "eta": 5
+      },
+      {
+        "id": "P36",
+        "dimensions": {
+          "w": 2,
+          "l": 4,
+          "h": 3
+        },
+        "value": 108,
+        "weight": 14,
+        "is_fragile": true,
+        "eta": 1
+      },
+      {
+        "id": "P37",
+        "dimensions": {
+          "w": 3,
+          "l": 3,
+          "h": 2
+        },
+        "value": 91,
+        "weight": 15,
+        "is_fragile": false,
+        "eta": 5
+      },
+      {
+        "id": "P38",
+        "dimensions": {
+          "w": 2,
+          "l": 5,
+          "h": 3
+        },
+        "value": 127,
+        "weight": 23,
+        "is_fragile": false,
+        "eta": 3
+      },
+      {
+        "id": "P39",
+        "dimensions": {
+          "w": 4,
+          "l": 5,
+          "h": 2
+        },
+        "value": 62,
+        "weight": 37,
+        "is_fragile": true,
+        "eta": 4
+      },
+      {
+        "id": "P40",
+        "dimensions": {
+          "w": 4,
+          "l": 6,
+          "h": 2
+        },
+        "value": 152,
+        "weight": 37,
+        "is_fragile": false,
+        "eta": 7
+      },
+      {
+        "id": "P41",
+        "dimensions": {
+          "w": 4,
+          "l": 6,
+          "h": 3
+        },
+        "value": 144,
+        "weight": 26,
+        "is_fragile": false,
+        "eta": 4
+      },
+      {
+        "id": "P42",
+        "dimensions": {
+          "w": 3,
+          "l": 2,
+          "h": 2
+        },
+        "value": 61,
+        "weight": 11,
+        "is_fragile": false,
+        "eta": 2
+      },
+      {
+        "id": "P43",
+        "dimensions": {
+          "w": 5,
+          "l": 2,
+          "h": 3
+        },
+        "value": 136,
+        "weight": 24,
+        "is_fragile": false,
+        "eta": 7
+      },
+      {
+        "id": "P44",
+        "dimensions": {
+          "w": 5,
+          "l": 3,
+          "h": 3
+        },
+        "value": 136,
+        "weight": 42,
+        "is_fragile": false,
+        "eta": 1
+      },
+      {
+        "id": "P45",
+        "dimensions": {
+          "w": 4,
+          "l": 3,
+          "h": 2
+        },
+        "value": 57,
+        "weight": 22,
+        "is_fragile": false,
+        "eta": 7
+      },
+      {
+        "id": "P46",
+        "dimensions": {
+          "w": 4,
+          "l": 6,
+          "h": 2
+        },
+        "value": 82,
+        "weight": 41,
+        "is_fragile": false,
+        "eta": 1
+      },
+      {
+        "id": "P47",
+        "dimensions": {
+          "w": 4,
+          "l": 4,
+          "h": 3
+        },
+        "value": 178,
+        "weight": 37,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P48",
+        "dimensions": {
+          "w": 3,
+          "l": 2,
+          "h": 2
+        },
+        "value": 64,
+        "weight": 22,
+        "is_fragile": false,
+        "eta": 2
+      },
+      {
+        "id": "P49",
+        "dimensions": {
+          "w": 5,
+          "l": 5,
+          "h": 3
+        },
+        "value": 87,
+        "weight": 39,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P50",
+        "dimensions": {
+          "w": 5,
+          "l": 3,
+          "h": 2
+        },
+        "value": 106,
+        "weight": 22,
+        "is_fragile": true,
+        "eta": 3
+      },
+      {
+        "id": "P51",
+        "dimensions": {
+          "w": 3,
+          "l": 3,
+          "h": 2
+        },
+        "value": 52,
+        "weight": 18,
+        "is_fragile": false,
+        "eta": 6
+      },
+      {
+        "id": "P52",
+        "dimensions": {
+          "w": 4,
+          "l": 4,
+          "h": 2
+        },
+        "value": 104,
+        "weight": 34,
+        "is_fragile": true,
+        "eta": 6
+      }
+    ]
+  },
+  "problem_file": "src/data/multi_truck.json",
+  "seed": 3,
+  "params": {
+    "population_size": 30,
+    "generations": 40,
+    "crossover_rate": 0.8,
+    "mutation_rate": 0.2,
+    "tournament_size": 3,
+    "elitism": 2
+  },
+  "initial_state": {
+    "placements": {
+      "P01": {
+        "truck": 2,
+        "x": 0,
+        "y": 2,
+        "z": 0,
+        "orientation": "yxz",
+        "dims": [6, 5, 2]
+      },
+      "P02": {
+        "truck": 2,
+        "x": 7,
+        "y": 10,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [2, 3, 5]
+      },
+      "P03": {
+        "truck": 0,
+        "x": 0,
+        "y": 3,
+        "z": 2,
+        "orientation": "yzx",
+        "dims": [2, 4, 2]
+      },
+      "P04": {
+        "truck": 1,
+        "x": 0,
+        "y": 4,
+        "z": 2,
+        "orientation": "yxz",
+        "dims": [6, 2, 2]
+      },
+      "P05": {
+        "truck": null,
+        "orientation": "zyx",
+        "dims": [3, 3, 2]
+      },
+      "P06": {
+        "truck": 2,
+        "x": 0,
+        "y": 2,
+        "z": 2,
+        "orientation": "yxz",
+        "dims": [6, 5, 3]
+      },
+      "P07": {
+        "truck": 1,
+        "x": 2,
+        "y": 0,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [4, 2, 4]
+      },
+      "P08": {
+        "truck": 0,
+        "x": 0,
+        "y": 8,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [4, 2, 4]
+      },
+      "P09": {
+        "truck": null,
+        "orientation": "zxy",
+        "dims": [6, 2, 2]
+      },
+      "P10": {
+        "truck": 2,
+        "x": 5,
+        "y": 10,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [2, 3, 4]
+      },
+      "P11": {
+        "truck": 0,
+        "x": 4,
+        "y": 0,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [4, 2, 2]
+      },
+      "P12": {
+        "truck": null,
+        "orientation": "zxy",
+        "dims": [5, 2, 4]
+      },
+      "P13": {
+        "truck": null,
+        "orientation": "yzx",
+        "dims": [2, 5, 5]
+      },
+      "P14": {
+        "truck": null,
+        "orientation": "xzy",
+        "dims": [3, 3, 3]
+      },
+      "P15": {
+        "truck": 0,
+        "x": 5,
+        "y": 10,
+        "z": 2,
+        "orientation": "xzy",
+        "dims": [3, 2, 2]
+      },
+      "P16": {
+        "truck": null,
+        "orientation": "yzx",
+        "dims": [3, 5, 2]
+      },
+      "P17": {
+        "truck": 2,
+        "x": 0,
+        "y": 8,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [3, 4, 5]
+      },
+      "P18": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [3, 3, 3]
+      },
+      "P19": {
+        "truck": 1,
+        "x": 0,
+        "y": 6,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [5, 2, 4]
+      },
+      "P20": {
+        "truck": null,
+        "orientation": "zyx",
+        "dims": [2, 3, 4]
+      },
+      "P21": {
+        "truck": 2,
+        "x": 5,
+        "y": 8,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [3, 2, 3]
+      },
+      "P22": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [4, 6, 2]
+      },
+      "P23": {
+        "truck": 2,
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [3, 2, 5]
+      },
+      "P24": {
+        "truck": null,
+        "orientation": "zxy",
+        "dims": [2, 2, 4]
+      },
+      "P25": {
+        "truck": 2,
+        "x": 3,
+        "y": 0,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [2, 2, 5]
+      },
+      "P26": {
+        "truck": 2,
+        "x": 0,
+        "y": 12,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [2, 2, 5]
+      },
+      "P27": {
+        "truck": 2,
+        "x": 5,
+        "y": 7,
+        "z": 3,
+        "orientation": "yzx",
+        "dims": [3, 3, 2]
+      },
+      "P28": {
+        "truck": 0,
+        "x": 6,
+        "y": 8,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [2, 4, 2]
+      },
+      "P29": {
+        "truck": 0,
+        "x": 0,
+        "y": 10,
+        "z": 0,
+        "orientation": "yxz",
+        "dims": [5, 2, 3]
+      },
+      "P30": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [3, 6, 2]
+      },
+      "P31": {
+        "truck": 1,
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "orientation": "xyz",
+        "dims": [2, 4, 3]
+      },
+      "P32": {
+        "truck": null,
+        "orientation": "zxy",
+        "dims": [2, 3, 4]
+      },
+      "P33": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [5, 2, 3]
+      },
+      "P34": {
+        "truck": null,
+        "orientation": "yzx",
+        "dims": [3, 5, 4]
+      },
+      "P35": {
+        "truck": 2,
+        "x": 5,
+        "y": 13,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [5, 3, 4]
+      },
+      "P36": {
+        "truck": 2,
+        "x": 5,
+        "y": 0,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [3, 2, 4]
+      },
+      "P37": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [3, 3, 2]
+      },
+      "P38": {
+        "truck": 0,
+        "x": 0,
+        "y": 3,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [3, 5, 2]
+      },
+      "P39": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [4, 5, 2]
+      },
+      "P40": {
+        "truck": 0,
+        "x": 4,
+        "y": 2,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [2, 6, 4]
+      },
+      "P41": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [6, 4, 3]
+      },
+      "P42": {
+        "truck": 2,
+        "x": 8,
+        "y": 7,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [2, 2, 3]
+      },
+      "P43": {
+        "truck": 2,
+        "x": 8,
+        "y": 0,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [2, 3, 5]
+      },
+      "P44": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [5, 3, 3]
+      },
+      "P45": {
+        "truck": 1,
+        "x": 2,
+        "y": 2,
+        "z": 0,
+        "orientation": "yxz",
+        "dims": [3, 4, 2]
+      },
+      "P46": {
+        "truck": 1,
+        "x": 0,
+        "y": 8,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [6, 2, 4]
+      },
+      "P47": {
+        "truck": 0,
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [4, 3, 4]
+      },
+      "P48": {
+        "truck": null,
+        "orientation": "xzy",
+        "dims": [3, 2, 2]
+      },
+      "P49": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [5, 5, 3]
+      },
+      "P50": {
+        "truck": 2,
+        "x": 0,
+        "y": 14,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [5, 2, 3]
+      },
+      "P51": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [3, 3, 2]
+      },
+      "P52": {
+        "truck": null,
+        "orientation": "zyx",
+        "dims": [2, 4, 4]
+      }
+    }
+  },
+  "initial_objective": 2745.0,
+  "initial_value": 2745.0,
+  "initial_feasible": true,
+  "initial_violations": {
+    "overlap": 0,
+    "out_of_bounds": 0,
+    "floating": 0,
+    "fragile_support": 0,
+    "overweight": 0
+  },
+  "final_state": {
+    "placements": {
+      "P01": {
+        "truck": 2,
+        "x": 0,
+        "y": 2,
+        "z": 0,
+        "orientation": "yxz",
+        "dims": [6, 5, 2]
+      },
+      "P02": {
+        "truck": 2,
+        "x": 7,
+        "y": 10,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [2, 3, 5]
+      },
+      "P03": {
+        "truck": 0,
+        "x": 6,
+        "y": 2,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [2, 4, 2]
+      },
+      "P04": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [6, 2, 2]
+      },
+      "P05": {
+        "truck": null,
+        "orientation": "zyx",
+        "dims": [3, 3, 2]
+      },
+      "P06": {
+        "truck": 2,
+        "x": 0,
+        "y": 2,
+        "z": 2,
+        "orientation": "yxz",
+        "dims": [6, 5, 3]
+      },
+      "P07": {
+        "truck": 1,
+        "x": 2,
+        "y": 0,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [4, 2, 4]
+      },
+      "P08": {
+        "truck": 0,
+        "x": 0,
+        "y": 8,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [4, 2, 4]
+      },
+      "P09": {
+        "truck": null,
+        "orientation": "zxy",
+        "dims": [6, 2, 2]
+      },
+      "P10": {
+        "truck": 2,
+        "x": 5,
+        "y": 10,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [2, 3, 4]
+      },
+      "P11": {
+        "truck": 0,
+        "x": 4,
+        "y": 0,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [4, 2, 2]
+      },
+      "P12": {
+        "truck": 2,
+        "x": 5,
+        "y": 14,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [5, 2, 4]
+      },
+      "P13": {
+        "truck": null,
+        "orientation": "yzx",
+        "dims": [2, 5, 5]
+      },
+      "P14": {
+        "truck": null,
+        "orientation": "xzy",
+        "dims": [3, 3, 3]
+      },
+      "P15": {
+        "truck": 0,
+        "x": 5,
+        "y": 10,
+        "z": 2,
+        "orientation": "xzy",
+        "dims": [3, 2, 2]
+      },
+      "P16": {
+        "truck": 0,
+        "x": 0,
+        "y": 3,
+        "z": 2,
+        "orientation": "yzx",
+        "dims": [3, 5, 2]
+      },
+      "P17": {
+        "truck": 2,
+        "x": 0,
+        "y": 8,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [3, 4, 5]
+      },
+      "P18": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [3, 3, 3]
+      },
+      "P19": {
+        "truck": 1,
+        "x": 0,
+        "y": 6,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [5, 2, 4]
+      },
+      "P20": {
+        "truck": 2,
+        "x": 3,
+        "y": 8,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [2, 3, 4]
+      },
+      "P21": {
+        "truck": 2,
+        "x": 5,
+        "y": 8,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [3, 2, 3]
+      },
+      "P22": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [4, 6, 2]
+      },
+      "P23": {
+        "truck": 2,
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [3, 2, 5]
+      },
+      "P24": {
+        "truck": 0,
+        "x": 4,
+        "y": 8,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [2, 2, 4]
+      },
+      "P25": {
+        "truck": 2,
+        "x": 3,
+        "y": 0,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [2, 2, 5]
+      },
+      "P26": {
+        "truck": 2,
+        "x": 0,
+        "y": 12,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [2, 2, 5]
+      },
+      "P27": {
+        "truck": 2,
+        "x": 5,
+        "y": 7,
+        "z": 3,
+        "orientation": "yzx",
+        "dims": [3, 3, 2]
+      },
+      "P28": {
+        "truck": 0,
+        "x": 6,
+        "y": 8,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [2, 4, 2]
+      },
+      "P29": {
+        "truck": 0,
+        "x": 0,
+        "y": 10,
+        "z": 0,
+        "orientation": "yxz",
+        "dims": [5, 2, 3]
+      },
+      "P30": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [3, 6, 2]
+      },
+      "P31": {
+        "truck": 1,
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "orientation": "xyz",
+        "dims": [2, 4, 3]
+      },
+      "P32": {
+        "truck": null,
+        "orientation": "zxy",
+        "dims": [2, 3, 4]
+      },
+      "P33": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [5, 2, 3]
+      },
+      "P34": {
+        "truck": null,
+        "orientation": "yzx",
+        "dims": [3, 5, 4]
+      },
+      "P35": {
+        "truck": null,
+        "orientation": "xzy",
+        "dims": [5, 3, 4]
+      },
+      "P36": {
+        "truck": 2,
+        "x": 5,
+        "y": 0,
+        "z": 0,
+        "orientation": "yzx",
+        "dims": [3, 2, 4]
+      },
+      "P37": {
+        "truck": 1,
+        "x": 3,
+        "y": 3,
+        "z": 2,
+        "orientation": "yxz",
+        "dims": [3, 3, 2]
+      },
+      "P38": {
+        "truck": 0,
+        "x": 0,
+        "y": 3,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [3, 5, 2]
+      },
+      "P39": {
+        "truck": null,
+        "orientation": "zyx",
+        "dims": [2, 5, 4]
+      },
+      "P40": {
+        "truck": 0,
+        "x": 4,
+        "y": 2,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [2, 6, 4]
+      },
+      "P41": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [6, 4, 3]
+      },
+      "P42": {
+        "truck": 2,
+        "x": 8,
+        "y": 7,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [2, 2, 3]
+      },
+      "P43": {
+        "truck": 2,
+        "x": 8,
+        "y": 0,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [2, 3, 5]
+      },
+      "P44": {
+        "truck": null,
+        "orientation": "xyz",
+        "dims": [5, 3, 3]
+      },
+      "P45": {
+        "truck": 1,
+        "x": 2,
+        "y": 2,
+        "z": 0,
+        "orientation": "yxz",
+        "dims": [3, 4, 2]
+      },
+      "P46": {
+        "truck": 1,
+        "x": 0,
+        "y": 8,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [6, 2, 4]
+      },
+      "P47": {
+        "truck": 0,
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "orientation": "zxy",
+        "dims": [4, 3, 4]
+      },
+      "P48": {
+        "truck": 2,
+        "x": 2,
+        "y": 12,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [3, 2, 2]
+      },
+      "P49": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [5, 5, 3]
+      },
+      "P50": {
+        "truck": 2,
+        "x": 0,
+        "y": 14,
+        "z": 0,
+        "orientation": "xzy",
+        "dims": [5, 2, 3]
+      },
+      "P51": {
+        "truck": null,
+        "orientation": "yxz",
+        "dims": [3, 3, 2]
+      },
+      "P52": {
+        "truck": 2,
+        "x": 8,
+        "y": 3,
+        "z": 0,
+        "orientation": "zyx",
+        "dims": [2, 4, 4]
+      }
+    }
+  },
+  "final_objective": 3231.0,
+  "final_value": 3231.0,
+  "feasible": true,
+  "final_violations": {
+    "overlap": 0,
+    "out_of_bounds": 0,
+    "floating": 0,
+    "fragile_support": 0,
+    "overweight": 0
+  },
+  "duration_sec": 0.28887616700012586,
+  "iterations": 40,
+  "history": {
+    "objective": [2745.0, 2745.0, 2745.0, 2822.0, 2822.0, 2822.0, 2822.0, 2881.0, 2881.0, 2881.0, 2881.0, 2886.0, 2945.0, 2945.0, 2945.0, 2945.0, 2945.0, 3049.0, 3049.0, 3049.0, 3058.0, 3101.0, 3101.0, 3101.0, 3101.0, 3110.0, 3110.0, 3222.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0],
+    "max": [2745.0, 2745.0, 2745.0, 2822.0, 2822.0, 2822.0, 2822.0, 2881.0, 2881.0, 2881.0, 2881.0, 2886.0, 2945.0, 2945.0, 2945.0, 2945.0, 2945.0, 3049.0, 3049.0, 3049.0, 3058.0, 3101.0, 3101.0, 3101.0, 3101.0, 3110.0, 3110.0, 3222.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0, 3231.0],
+    "avg": [2232.733333333333, 896.3066666666667, 734.7733333333333, 770.3066666666667, 1854.3, 2770.9333333333334, 2793.7, 2814.733333333333, 2812.6, 2808.4333333333334, 2832.633333333333, 2827.6, 2862.213333333333, 2847.366666666667, 2853.0, 2882.9, 2865.4666666666667, 2917.7066666666665, 2911.6066666666666, 2910.76, 2961.0666666666666, 2991.326666666667, 2973.42, 2961.2533333333336, 3005.1200000000003, 2980.1600000000003, 2993.0933333333332, 3027.8466666666664, 3081.9666666666667, 3067.866666666667, 3117.686666666667, 3188.36, 3195.8933333333334, 3196.18, 3201.1666666666665, 3180.2, 3200.4266666666667, 3213.6666666666665, 3216.366666666667, 3218.9333333333334, 3212.9]
+  },
+  "extra": {
+    "population_size": 30,
+    "generations": 40,
+    "evaluations": 1230,
+    "value_per_truck": [980.0, 490.0, 1761.0]
+  }
+}
