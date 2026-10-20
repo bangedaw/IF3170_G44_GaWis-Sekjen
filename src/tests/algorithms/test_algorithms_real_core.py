@@ -11,7 +11,6 @@ DATA = Path(__file__).resolve().parents[2] / "data"
 QUICK_PARAMS = {
     "steepest_ascent_hc": {"neighbor_limit": 40, "max_iterations": 4},
     "stochastic_hc": {"neighbor_limit": 40, "max_iterations": 4},
-    "first_choice_hc": {"neighbor_limit": 40, "max_iterations": 4},
     "sideways_move_hc": {"max_sideways": 2, "neighbor_limit": 40, "max_iterations": 4},
     "random_restart_hc": {"max_restart": 2, "base_params": {"neighbor_limit": 30, "max_iterations": 2}},
     "simulated_annealing": {"t0": 50, "cooling": 0.99, "max_iterations": 300, "stuck_patience": 50},

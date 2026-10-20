@@ -25,5 +25,5 @@ def test_config_expands_to_valid_runs(path):
 def test_mandatory_experiment_sizes():
     hill_climbing = runner.expand_config(runner.load_config(runner.SRC_DIR / "experiments/configs/hill_climbing.json"))
     annealing = runner.expand_config(runner.load_config(runner.SRC_DIR / "experiments/configs/simulated_annealing.json"))
-    assert len(hill_climbing) == 15 and len({s.algorithm for s in hill_climbing}) == 5
+    assert len(hill_climbing) == 12 and len({s.algorithm for s in hill_climbing}) == 4
     assert len(annealing) == 3

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from algorithms.base import LocalSearch
 from algorithms.genetic_algorithm import GeneticAlgorithm
-from algorithms.hill_climbing.first_choice import FirstChoiceHC
 from algorithms.hill_climbing.random_restart import RandomRestartHC
 from algorithms.hill_climbing.sideways import SidewaysMoveHC
 from algorithms.hill_climbing.steepest_ascent import SteepestAscentHC
@@ -11,7 +10,7 @@ from algorithms.simulated_annealing import SimulatedAnnealing
 
 ALGORITHMS: dict[str, type[LocalSearch]] = {
     cls.name: cls
-    for cls in (SteepestAscentHC, StochasticHC, SidewaysMoveHC, RandomRestartHC, FirstChoiceHC,
+    for cls in (SteepestAscentHC, StochasticHC, SidewaysMoveHC, RandomRestartHC,
                 SimulatedAnnealing, GeneticAlgorithm)
 }
 

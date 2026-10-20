@@ -47,15 +47,6 @@
       }
     },
     {
-      "algorithm": "first_choice_hc",
-      "objective": "default",
-      "label": "{algorithm}_multi_default",
-      "params": {
-        "neighbor_limit": null,
-        "max_iterations": null
-      }
-    },
-    {
       "algorithm": "sideways_move_hc",
       "objective": "default",
       "label": "{algorithm}_multi_default",

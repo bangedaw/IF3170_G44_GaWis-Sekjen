@@ -4,7 +4,6 @@
 
 | experiment | label | algorithm | objective_name | runs | feasible_rate | final_objective_max | final_objective_mean | final_objective_std | final_value_mean | final_value_std | iterations_mean | iterations_std | duration_sec_mean | duration_sec_std |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-|  | first_choice_hc_multi_default | first_choice_hc | default | 3 | 1.00 | 3526.00 | 3485.00 | 35.51 | 3485.00 | 35.51 | 41.67 | 7.37 | 0.5315 | 0.0947 |
 |  | ga_multi_alt_pop30_gen40 | genetic_algorithm | alt | 3 | 1.00 | 5156.91 | 5087.22 | 62.29 | 3137.00 | 117.66 | 40.00 | 0.0000 | 0.2838 | 0.0091 |
 |  | ga_multi_default_pop30_gen40 | genetic_algorithm | default | 3 | 1.00 | 3242.00 | 3225.67 | 19.55 | 3225.67 | 19.55 | 40.00 | 0.0000 | 0.2749 | 0.0161 |
 |  | random_restart_hc_multi_default | random_restart_hc | default | 3 | 1.00 | 3693.00 | 3634.33 | 53.27 | 3634.33 | 53.27 | 195.33 | 9.07 | 28.22 | 1.11 |
@@ -17,9 +16,6 @@
 
 | experiment | file | label | algorithm | objective_name | seed | initial_objective | final_objective | final_value | feasible | iterations | duration_sec | restarts | max_restart | sideways_used | max_sideways | stuck_count | population_size | generations | value_per_truck |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-|  | first_choice_hc_multi_default_1.json | first_choice_hc_multi_default | first_choice_hc | default | 1 | 2170.00 | 3526.00 | 3526.00 | True | 39 | 0.6004 |  |  |  |  |  |  |  | [1051.0, 595.0, 1880.0] |
-|  | first_choice_hc_multi_default_2.json | first_choice_hc_multi_default | first_choice_hc | default | 2 | 1831.00 | 3464.00 | 3464.00 | True | 50 | 0.5705 |  |  |  |  |  |  |  | [961.0, 659.0, 1844.0] |
-|  | first_choice_hc_multi_default_3.json | first_choice_hc_multi_default | first_choice_hc | default | 3 | 2029.00 | 3465.00 | 3465.00 | True | 36 | 0.4235 |  |  |  |  |  |  |  | [902.0, 625.0, 1938.0] |
 |  | ga_multi_alt_pop30_gen40_1.json | ga_multi_alt_pop30_gen40 | genetic_algorithm | alt | 1 | 4341.28 | 5036.97 | 3144.00 | True | 40 | 0.2838 |  |  |  |  |  | 30 | 40 | [932.0, 611.0, 1601.0] |
 |  | ga_multi_alt_pop30_gen40_2.json | ga_multi_alt_pop30_gen40 | genetic_algorithm | alt | 2 | 4396.96 | 5067.79 | 3016.00 | True | 40 | 0.2747 |  |  |  |  |  | 30 | 40 | [670.0, 598.0, 1748.0] |
 |  | ga_multi_alt_pop30_gen40_3.json | ga_multi_alt_pop30_gen40 | genetic_algorithm | alt | 3 | 4407.84 | 5156.91 | 3251.00 | True | 40 | 0.2930 |  |  |  |  |  | 30 | 40 | [939.0, 517.0, 1795.0] |

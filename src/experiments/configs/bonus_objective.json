@@ -47,15 +47,6 @@
       }
     },
     {
-      "algorithm": "first_choice_hc",
-      "objective": "alt",
-      "label": "{algorithm}_alt",
-      "params": {
-        "neighbor_limit": null,
-        "max_iterations": null
-      }
-    },
-    {
       "algorithm": "sideways_move_hc",
       "objective": "alt",
       "label": "{algorithm}_alt",

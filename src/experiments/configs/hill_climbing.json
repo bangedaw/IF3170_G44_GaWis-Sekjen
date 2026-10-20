@@ -7,7 +7,6 @@
   "runs": [
     {"algorithm": "steepest_ascent_hc", "params": {"neighbor_limit": null, "max_iterations": null}},
     {"algorithm": "stochastic_hc", "params": {"mode": "uphill", "weighted": false, "neighbor_limit": null, "max_iterations": 1000}},
-    {"algorithm": "first_choice_hc", "params": {"neighbor_limit": null, "max_iterations": null}},
     {"algorithm": "sideways_move_hc", "params": {"max_sideways": 100, "neighbor_limit": null, "max_iterations": null}},
     {"algorithm": "random_restart_hc", "params": {"max_restart": 10, "base_algorithm": "steepest_ascent_hc", "base_params": {}}}
   ]

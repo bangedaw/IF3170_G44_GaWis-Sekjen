@@ -1,7 +1,6 @@
 import pytest
 
 from algorithms.hill_climbing.common import EPS
-from algorithms.hill_climbing.first_choice import FirstChoiceHC
 from algorithms.hill_climbing.random_restart import RandomRestartHC
 from algorithms.hill_climbing.sideways import SidewaysMoveHC
 from algorithms.hill_climbing.steepest_ascent import SteepestAscentHC
@@ -13,7 +12,6 @@ SINGLE_CLIMB = [
     (StochasticHC, {}),
     (StochasticHC, {"weighted": True}),
     (StochasticHC, {"mode": "random", "max_iterations": 50}),
-    (FirstChoiceHC, {}),
 ]
 
 
@@ -40,8 +38,7 @@ def test_hill_climbing_never_goes_down(knapsack, cls, params, seed):
     assert "stop_reason" in result.extra
 
 
-@pytest.mark.parametrize("cls, params", [(SteepestAscentHC, {}), (StochasticHC, {}), (StochasticHC, {"weighted": True}),
-                                         (FirstChoiceHC, {})])
+@pytest.mark.parametrize("cls, params", [(SteepestAscentHC, {}), (StochasticHC, {}), (StochasticHC, {"weighted": True})])
 @pytest.mark.parametrize("seed", [1, 2, 3])
 def test_full_neighborhood_climbers_stop_at_local_optimum(fake_core, knapsack, cls, params, seed):
     result = cls(knapsack, seed=seed, **params).run()
@@ -55,26 +52,6 @@ def test_steepest_ascent_takes_best_neighbor(fake_core, knapsack):
     objective = fake_core.get_objective("default")
     best_first_step = max(objective(knapsack, neighbor) for neighbor, _ in fake_core.neighbors(knapsack, start))
     assert result.history["objective"][1] == best_first_step
-
-
-def test_first_choice_takes_the_first_improving_neighbor(fake_core, knapsack):
-    result = FirstChoiceHC(knapsack, seed=4).run()
-    start = fake_core.state_from_dict(result.initial_state)
-    objective = fake_core.get_objective("default")
-    improving = {objective(knapsack, n) for n, _ in fake_core.neighbors(knapsack, start)
-                 if objective(knapsack, n) > result.initial_objective + EPS}
-    assert result.history["objective"][1] in improving
-
-
-def test_first_choice_evaluates_fewer_neighbors_than_steepest_ascent(knapsack):
-    first = FirstChoiceHC(knapsack, seed=2).run()
-    steepest = SteepestAscentHC(knapsack, seed=2).run()
-    assert first.extra["evaluations"] < steepest.extra["evaluations"]
-
-
-def test_first_choice_respects_neighbor_limit_and_max_iterations(knapsack):
-    result = FirstChoiceHC(knapsack, seed=1, neighbor_limit=3, max_iterations=2).run()
-    assert result.iterations <= 2
 
 
 def test_max_iterations_respected(knapsack):
